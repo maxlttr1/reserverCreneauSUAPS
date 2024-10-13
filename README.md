@@ -7,3 +7,8 @@ Tout ce dont vous aurez besoin, c'est de votre username et password, et je suppo
 
 Avec ce bout de code, il sera très simple d'automatiser complètement la réservation de créneau et de ne plus avoir de problème de place.
 En effet, pour le moment on a besoin d'un input utilisateur, cependant vous pouvez récupérer directement l'ID du créneau et de l'activité pour réserver automatiquement, sans prendre l'input user.
+
+Pour installer tous les modules nécessaires, utilisez la commande :
+```bash
+python.exe -m pip install -r requirements.txt
+```
