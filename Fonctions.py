@@ -142,22 +142,28 @@ class AutoSUAPS :
         
         return df
     
-    def reserverCreneau(self) :
+    def reserverCreneau(self, *args) :
         '''
         Affiche la data frame et prend un input utilisateur pour réserver un créneau
         '''
         df = self.getActivitiesInfo()
-        print(df.drop(['activity_id', 'id'], axis=1))
-    
-        input_user = input('Entrez le numéro des créneaux que vous voulez réserver, avec des espaces.\nPar exemple, 10 2 réserve les créeaux 10 et 2\n$> ')
-        liste_input = input_user.split(' ')
         
-        if None in liste_input :
-            liste_input.pop(None)
+        if args == () :
+            print(df.drop(['activity_id', 'id'], axis=1))
         
-        if '' in liste_input :
-            liste_input.pop('')
+            input_user = input('Entrez le numéro des créneaux que vous voulez réserver, avec des espaces.\nPar exemple, 10 2 réserve les créeaux 10 et 2\n$> ')
+            liste_input = input_user.split(' ')
             
+            if None in liste_input :
+                liste_input.pop(None)
+            
+            if '' in liste_input :
+                liste_input.pop('')
+        
+        else :
+            # On prend directements les arguments donnés par l'user
+            liste_input = args
+                
         try :
             liste_input = list(map(lambda x : int(x), liste_input))
         
