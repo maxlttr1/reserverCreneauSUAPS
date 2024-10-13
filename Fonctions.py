@@ -145,6 +145,8 @@ class AutoSUAPS :
     def reserverCreneau(self, *args) :
         '''
         Affiche la data frame et prend un input utilisateur pour réserver un créneau
+        Si aucun argument n'est spécifié, on print le tableau et on demande à l'utilisateur de saisir les créneaux qu'il veut.
+        Sinon, on réserve les créneaux de *args.
         '''
         df = self.getActivitiesInfo()
         

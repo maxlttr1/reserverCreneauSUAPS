@@ -5,4 +5,6 @@ username = ...
 password = ...
 
 auto = AutoSUAPS(username, password, LOGIN_URL)
-auto.reserverCreneau(14, 18, 21)
+
+auto.reserverCreneau() # Commencer par ça
+# auto.reserverCreneau(14, 18, 21) # Réserve les créneaux
