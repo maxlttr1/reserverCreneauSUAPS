@@ -132,6 +132,7 @@ class AutoSUAPS :
                     'jour': jour,
                     'creneau_horaire': creneau_horaire,
                     'lieu' : lieu,
+                    'places_restantes' : activity['quota'] - activity['nbInscrits'],
                     'id': activity['id']
                 })
         
@@ -142,7 +143,7 @@ class AutoSUAPS :
         
         return df
     
-    def reserverCreneau(self, *args) :
+    def reserverCreneau(self, liste_input : list[str] = []) :
         '''
         Affiche la data frame et prend un input utilisateur pour réserver un créneau
         Si aucun argument n'est spécifié, on print le tableau et on demande à l'utilisateur de saisir les créneaux qu'il veut.
@@ -150,40 +151,54 @@ class AutoSUAPS :
         '''
         df = self.getActivitiesInfo()
         
-        if args == () :
+        if liste_input == [] :
             print(df.drop(['activity_id', 'id'], axis=1))
         
             input_user = input('Entrez le numéro des créneaux que vous voulez réserver, avec des espaces.\nPar exemple, 10 2 réserve les créeaux 10 et 2\n$> ')
-            liste_input = input_user.split(' ')
+            liste_indexes = input_user.split(' ')
             
-            if None in liste_input :
-                liste_input.pop(None)
+            if None in liste_indexes :
+                liste_indexes.pop(None)
             
-            if '' in liste_input :
-                liste_input.pop('')
-        
-        else :
-            # On prend directements les arguments donnés par l'user
-            liste_input = args
+            if '' in liste_indexes :
+                liste_indexes.pop('')
                 
-        try :
-            liste_input = list(map(lambda x : int(x), liste_input))
+            try :
+                liste_indexes = list(map(lambda x : int(x), liste_indexes))
         
-        except ValueError :
-            print('Entrée non valide')
-            return
-            
+            except ValueError :
+                print('Entrée non valide')
+                return
+        
         else :
-            for index_input in liste_input :
-                try :
-                    activity_id = df.iloc[index_input]['activity_id']
-                    creneau_id = df.iloc[index_input]['id']
-                except :
-                    print('Valeur d\'index non valide')
-                    return
-                else :
+            liste_indexes = []
+            for element in liste_input : 
+                activity_name, day, hourStart = list(map(lambda x : x.capitalize(), element.split(' ')))
+                
+                for i in range(df.shape[0]) : 
+                    if (activity_name in df.iloc[i]['activity_name'] and
+                    df.iloc[i]['jour'] == day and 
+                    df.iloc[i]['creneau_horaire'].startswith(hourStart)) :
+                        liste_indexes.append(i)
+                        
+        for index_input in liste_indexes :
+            try :
+                activity_id = df.iloc[index_input]['activity_id']
+                creneau_id = df.iloc[index_input]['id']
+                places_restantes = df.iloc[index_input]['places_restantes']
+            except :
+                print('Valeur d\'index non valide')
+                return
+            else :
+                if places_restantes > 0 :
                     if self.poster_requete(creneau_id, activity_id) :
                         print(f"Inscription effectuée en {df.iloc[index_input]['activity_name']}, le {df.iloc[index_input]['jour']} pour le créneau de {df.iloc[index_input]['creneau_horaire']}")
+
+                    else :
+                        print(f'Erreur d\'inscription pour le créneau {df.iloc[index_input]["activity_name"]}')
+                
+                else :
+                    print(f'Pas de places restantes pour le créneau {df.iloc[index_input]["activity_name"]}')
 
 
     def poster_requete(self, id_creneau, id_activite):
