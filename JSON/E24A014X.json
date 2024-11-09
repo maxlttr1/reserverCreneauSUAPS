@@ -1,0 +1,22 @@
+{
+    "code": "E24A014X",
+    "numero": "E24A014X",
+    "type": "ETUDIANT_INTERNE",
+    "typeExterne": null,
+    "civilite": null,
+    "nom": "DOMENICHINI",
+    "prenom": "NATHAN",
+    "email": "nathan.domenichini@etu.univ-nantes.fr",
+    "telephone": null,
+    "dateNaissance": "2005-12-29",
+    "estBoursier": false,
+    "composante": "DEPT. GENIE CIVIL",
+    "departement": "",
+    "estInscrit": true,
+    "paiementEffectue": true,
+    "casContact": null,
+    "reduction": null,
+    "etablissementOrigine": null,
+    "tagHexa": null,
+    "majorite": "Majeur"
+}

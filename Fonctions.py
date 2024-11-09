@@ -3,6 +3,7 @@ import requests
 import json
 from bs4 import BeautifulSoup
 import pandas as pd
+import os
 
 class AutoSUAPS :
     def __init__(self, username, password, LOGIN_URL) :
@@ -47,15 +48,23 @@ class AutoSUAPS :
         '''
         Retourne la data JSON de l'étudiant en question (de toi qui lis ce code)
         '''
-        rep = self.session.get('https://u-sport.univ-nantes.fr/api/individus/me')
-        return rep.json()
+        path = f'./JSON/{self.username}.json'
+        if os.path.exists(path):
+            with open(path, 'r', encoding='utf-8') as file:
+                data = json.load(file)
+                return data
+        else : 
+            rep = self.session.get('https://u-sport.univ-nantes.fr/api/individus/me').json()
+            with open(path, 'w', encoding='utf-8') as file :
+                json.dump(data, file, indent=4)
+            return rep
+        
     
     def getCreneau(self, id_creneau, id_activite) -> str | None:
         '''
         Retourne les data JSON d'un créneau à partir de son ID et de l'ID de l'activité
         '''
         URL = f'https://u-sport.univ-nantes.fr/api/extended/creneau-recurrents/semaine?idActivite={id_activite}&idPeriode={self.id_periode}&idIndividu={self.username}'
-        
         rep = self.session.get(URL).json()
         
         for creneau in rep :
@@ -142,6 +151,7 @@ class AutoSUAPS :
         df.reset_index(inplace=True, drop=True) 
         
         return df
+        
     
     def reserverCreneau(self, liste_input : list[str] = []) :
         '''
@@ -152,7 +162,7 @@ class AutoSUAPS :
         df = self.getActivitiesInfo()
         
         if liste_input == [] :
-            print(df.drop(['activity_id', 'id'], axis=1))
+            print(df.drop(['activity_id'], axis=1))
         
             input_user = input('Entrez le numéro des créneaux que vous voulez réserver, avec des espaces.\nPar exemple, 10 2 réserve les créeaux 10 et 2\n$> ')
             liste_indexes = input_user.split(' ')
@@ -172,15 +182,12 @@ class AutoSUAPS :
         
         else :
             liste_indexes = []
-            for element in liste_input : 
-                activity_name, day, hourStart = list(map(lambda x : x.capitalize(), element.split(' ')))
+            for id_creneau in liste_input : 
                 
                 for i in range(df.shape[0]) : 
-                    if (activity_name in df.iloc[i]['activity_name'] and
-                    df.iloc[i]['jour'] == day and 
-                    df.iloc[i]['creneau_horaire'].startswith(hourStart)) :
+                    if id_creneau == df.iloc[i]['id'] :
                         liste_indexes.append(i)
-                        
+                                   
         for index_input in liste_indexes :
             try :
                 activity_id = df.iloc[index_input]['activity_id']
@@ -230,7 +237,7 @@ class AutoSUAPS :
         post_data_json = json.dumps(post_data)
 
         rep = self.session.post(postURL, 
-                    data=post_data_json, 
-                    headers = headers)
+                                data = post_data_json, 
+                                headers = headers)
         
         return rep.status_code == 201
