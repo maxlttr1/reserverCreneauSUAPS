@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    env_file:
+      - .env  # Charge le fichier .env avec les variables d'environnement
+    # Pas de section 'ports' ici, car vous n'avez pas besoin d'exposer un port
