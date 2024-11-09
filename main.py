@@ -1,5 +1,4 @@
 from Fonctions import AutoSUAPS
-import datetime
 from dotenv import load_dotenv
 from os import getenv
 
@@ -22,7 +21,7 @@ ids_creneaux_a_resa = ['a67c920a-fc66-452c-8d07-5d7206a44f5b',
 # Si la liste creneaux_a_resa en arg, rien à faire. Si pas d'arg, on prend l'input utilisateur.
 auto.reserverCreneau(ids_creneaux_a_resa)'''
 
-
+print('online')
 
 import schedule
 import time
