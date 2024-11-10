@@ -152,6 +152,8 @@ class AutoSUAPS :
         
         return df
         
+    def printIDs(self) :
+        print(self.getActivitiesInfo().drop(['activity_id']))
     
     def reserverCreneau(self, liste_input : list[str] = []) :
         '''
@@ -162,7 +164,7 @@ class AutoSUAPS :
         df = self.getActivitiesInfo()
         
         if liste_input == [] :
-            print(df.drop(['activity_id'], axis=1))
+            print(df.drop(['activity_id', 'id'], axis=1))
         
             input_user = input('Entrez le numéro des créneaux que vous voulez réserver, avec des espaces.\nPar exemple, 10 2 réserve les créeaux 10 et 2\n$> ')
             liste_indexes = input_user.split(' ')
