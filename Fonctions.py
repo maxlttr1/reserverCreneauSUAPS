@@ -239,5 +239,9 @@ class AutoSUAPS :
         rep = self.session.post(postURL, 
                                 data = post_data_json, 
                                 headers = headers)
-        
+
         return rep.status_code == 201
+    
+    def logout(self) : self.session.close()
+    
+    
