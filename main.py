@@ -43,8 +43,11 @@ ids_creneaux_a_resa = ['a67c920a-fc66-452c-8d07-5d7206a44f5b',
                        '369278cd-f3e2-4432-b6b3-ca7437f11854']
 
 def actions() :
-    auto = AutoSUAPS(USERNAME, PASSWORD, LOGIN_URL)
-    auto.reserverCreneau(ids_creneaux_a_resa)
+    try :
+        auto = AutoSUAPS(USERNAME, PASSWORD, LOGIN_URL)
+        auto.reserverCreneau(ids_creneaux_a_resa)
+    except :
+        pass
     
 schedule.every().saturday.at("12:01").do(actions)
 schedule.every().thursday.at("21:02").do(actions)
