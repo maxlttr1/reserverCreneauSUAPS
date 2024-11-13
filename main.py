@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from os import getenv
 import time
 import schedule
+import datetime
 
 load_dotenv()
 
@@ -39,20 +40,27 @@ auto.reserverCreneau(ids_creneaux_a_resa)
 
 # 2ème solution
 ids_creneaux_a_resa = ['a67c920a-fc66-452c-8d07-5d7206a44f5b', 
-                       '6ab242fa-79cd-435a-a71b-5dceb122b775',
-                       '369278cd-f3e2-4432-b6b3-ca7437f11854']
+                       'c12b09b0-8660-4b3c-9711-983317af0441',
+                       '6ab242fa-79cd-435a-a71b-5dceb122b775']
 
 def actions() :
     try :
         auto = AutoSUAPS(USERNAME, PASSWORD, LOGIN_URL)
         auto.reserverCreneau(ids_creneaux_a_resa)
-    except :
-        pass
+    except Exception as e:
+        print(e)
     
 schedule.every().saturday.at("12:01").do(actions)
-schedule.every().thursday.at("21:02").do(actions)
+schedule.every().thursday.at("19:32").do(actions)
     
 while True:
     schedule.run_pending()
-    time.sleep(1)
+    
+    # Calculer le temps avant la prochaine exécution planifiée
+    next_run = schedule.next_run()
+    now = datetime.datetime.now()
+    time_to_next_run = next_run - now
+    print(f"Temps avant la prochaine exécution planifiée : {time_to_next_run}")
+
+    time.sleep(60)  # Vérifier toutes les minutes
     
