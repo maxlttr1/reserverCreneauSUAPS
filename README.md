@@ -6,13 +6,19 @@ Tout se fait avec des requêtes GET/POST. J'ai utilisé [Burp Suite](https://por
 
 Tout ce dont vous aurez besoin, c'est de votre username et password, et je suppose qu'il faut que vous ayez adhéré au SUAPS.
 
-Avec ce bout de code, il sera très simple d'automatiser complètement la réservation de créneau et de ne plus avoir de problème de place.
-En effet, pour le moment on a besoin d'un input utilisateur, cependant vous pouvez récupérer directement l'ID du créneau et de l'activité pour réserver automatiquement, sans prendre l'input user.
+Deux manières de fonctionner :
+- "Basique" : le programme renvoie un tableau avec tous les IDs des activités, vous choisissez celles que vous voulez
+- Ou vous rentrez des IDs dans une liste python et c'est très facilement automatisable. Dans ce cas, utilisez le module `schedule`, pour régler le jour et l'heure de vos réservations.
 
 Ce que vous devez faire : 
-1. Renommez `.example.env` en `.env`, l'ouvrir et remplir les champs **USERNAME** et **PASSWORD**
+- Renommez `.example.env` en `.env`, l'ouvrir et remplir les champs **USERNAME** et **PASSWORD** 
+- Si vous utilisez Docker, faites simplement :
+```bash
+docker-compose up -d
+```
 
-2. Installez tous les modules nécessaires avec :
+Sinon, par la manière "classique" :
+1. Installez tous les modules nécessaires avec :
     ```bash
     pip install -r requirements.txt
     ```
@@ -22,7 +28,7 @@ Ce que vous devez faire :
     python.exe -m pip install -r requirements.txt
     ```
 
-3. Lancez `main.py` : 
+2. Lancez `main.py` : 
    - Soit dans un IDE
    - Soit dans un terminal avec : 
         ```bash
