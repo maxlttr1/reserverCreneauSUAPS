@@ -50,17 +50,10 @@ def actions() :
     except Exception as e:
         print(e)
     
-schedule.every().saturday.at("12:01").do(actions)
+schedule.every().saturday.at("12:02").do(actions)
 schedule.every().thursday.at("19:32").do(actions)
     
 while True:
     schedule.run_pending()
-    
-    # Calculer le temps avant la prochaine exécution planifiée
-    next_run = schedule.next_run()
-    now = datetime.datetime.now()
-    time_to_next_run = next_run - now
-    print(f"Temps avant la prochaine exécution planifiée : {time_to_next_run}")
-
-    time.sleep(60)  # Vérifier toutes les minutes
+    time.sleep(60)
     
