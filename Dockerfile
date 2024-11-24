@@ -7,4 +7,7 @@ COPY . .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copier example.env en .env si .env n'existe pas
+RUN if [ ! -f .env ]; then cp example.env .env; fi
+
 CMD ["python", "-u", "main.py"]

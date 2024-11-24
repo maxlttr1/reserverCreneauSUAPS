@@ -5,4 +5,5 @@ services:
     build:
       context: .
     env_file:
-      - .example.env
+      - .env # Variables d'environnement
+    restart: always
