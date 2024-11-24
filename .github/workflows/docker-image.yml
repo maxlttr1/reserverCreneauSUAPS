@@ -1,0 +1,45 @@
+name: Publish Docker image
+
+on:
+  release:
+    types: [created]  # Déclenchement lors de la création d'une release
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      
+    steps:
+      # Étape 1 : Récupérer les fichiers du repository
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      # Étape 2 : Se connecter au registre de conteneurs GitHub (GHCR)
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      # Étape 3 : Extraire les métadonnées (tags, labels)
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      
+      # Étape 4 : Construire et publier l'image Docker
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          context: .
