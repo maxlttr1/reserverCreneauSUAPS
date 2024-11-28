@@ -6,4 +6,4 @@ services:
       context: .
     env_file:
       - .env # Variables d'environnement
-    restart: always
+    restart: unless-stopped
