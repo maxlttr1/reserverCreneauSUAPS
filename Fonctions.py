@@ -48,16 +48,7 @@ class AutoSUAPS :
         '''
         Retourne la data JSON de l'étudiant en question (de toi qui lis ce code)
         '''
-        path = f'./JSON/{self.username}.json'
-        if os.path.exists(path):
-            with open(path, 'r', encoding='utf-8') as file:
-                data = json.load(file)
-                return data
-        else : 
-            rep = self.session.get('https://u-sport.univ-nantes.fr/api/individus/me').json()
-            with open(path, 'w', encoding='utf-8') as file :
-                json.dump(data, file, indent=4)
-            return rep
+        return self.session.get('https://u-sport.univ-nantes.fr/api/individus/me').json()
         
     
     def getCreneau(self, id_creneau, id_activite) -> str | None:
