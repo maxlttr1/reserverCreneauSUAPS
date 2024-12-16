@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 from os import getenv
 import time
 import schedule
-import datetime
 
 load_dotenv()
 
@@ -23,7 +22,7 @@ la fonction vous demandera un input pour savoir ce que vous voulez réserver.
 Sinon, utilisez ce bout de code pour afficher les IDs des activités que vous souhaitez réserver,
 et le programme pourra réserver chaque semaine
 
-auto = AutoSUAPS(USERNAME, PASSWORD, LOGIN_URL)
+auto = AutoSUAPS(USERNAME, PASSWORD)
 auto.printIDs()
 
 Ensuite, mettez ces IDs dans la liste ci-dessus et 
@@ -33,9 +32,9 @@ auto.reserverCreneau(ids_creneaux_a_resa)
 '''
 
 
-# 1ère solution
-# auto = AutoSUAPS(USERNAME, PASSWORD, LOGIN_URL)
-# auto.reserverCreneau()
+'''# 1ère solution
+auto = AutoSUAPS(USERNAME, PASSWORD)
+auto.printIDs()'''
 
 
 # 2ème solution
@@ -43,17 +42,23 @@ ids_creneaux_a_resa = ['a67c920a-fc66-452c-8d07-5d7206a44f5b',
                        'c12b09b0-8660-4b3c-9711-983317af0441',
                        '6ab242fa-79cd-435a-a71b-5dceb122b775']
 
-def actions() :
-    try :
-        auto = AutoSUAPS(USERNAME, PASSWORD, LOGIN_URL)
-        auto.reserverCreneau(ids_creneaux_a_resa)
-    except Exception as e:
-        print(e)
-    
-schedule.every().saturday.at("12:02").do(actions)
-schedule.every().thursday.at("19:32").do(actions)
-    
-while True:
-    schedule.run_pending()
-    time.sleep(60)
+forcing = [0, 1, 0]
+
+def actions(creneaux = ids_creneaux_a_resa) :
+    auto = AutoSUAPS(USERNAME, PASSWORD)
+    auto.reserverCreneau(creneaux)
+
+
+if __name__ == '__main__' :
+
+    schedule.every().saturday.at("12:02").do(actions)
+    schedule.every().thursday.at("19:32").do(actions)
+
+    while True:
+        schedule.run_pending()
+
+        if any(i for i in forcing) :
+            actions(ids_creneaux_a_resa[i] for i in range(len(ids_creneaux_a_resa)) if forcing[i])
+
+        time.sleep(60)
     

@@ -3,17 +3,13 @@ import requests
 import json
 from bs4 import BeautifulSoup
 import pandas as pd
-import os
 
 class AutoSUAPS :
-    def __init__(self, username, password, LOGIN_URL) :
-        '''
-        AutoSUAPS : Permet de gérer les réservations de créneaux pour le SUAPS
-        
-        Paramètres :
-        - username : identifiant de l'université
-        - password : mot de passe
-        - LOGIN_URL : url de login
+    def __init__(self, username, password, LOGIN_URL = 'https://cas6n.univ-nantes.fr/esup-cas-server/login?service=https%3A%2F%2Fu-sport.univ-nantes.fr%2Fcas%2F') :
+        '''Permet de gérer les réservations de créneaux pour le SUAPS
+        @param username: identifiant de l'université
+        @param password: mot de passe
+        @param LOGIN_URL: url de login
         '''
         self.username = username
         self.password = password
@@ -118,30 +114,29 @@ class AutoSUAPS :
         for activity_id in self.getActivities():
             URL = f'https://u-sport.univ-nantes.fr/api/extended/creneau-recurrents/semaine?idActivite={activity_id}&idPeriode={self.id_periode}&idIndividu={self.username}'
             rep = self.session.get(URL).json()
+
+            if activity_name := rep[0]["activite"]['nom'] :
+                for activity in rep:
+                    jour = activity['jour'].capitalize()
+                    creneau_horaire = activity['horaireDebut'] + ' - ' + activity['horaireFin']
+                    lieu = activity['localisation']['nom']
+                    
+                    activities_list.append({
+                        'activity_name': activity_name,
+                        'activity_id': activity_id,
+                        'jour': jour,
+                        'creneau_horaire': creneau_horaire,
+                        'lieu' : lieu,
+                        'places_restantes' : activity['quota'] - activity['nbInscrits'],
+                        'id': activity['id']
+                    })
             
-            activity_name = rep[0]["activite"]["nom"]
+            df = pd.DataFrame(activities_list)
+            df['jour'] = pd.Categorical(df['jour'], categories=ordered_days, ordered=True)
+            df = df.sort_values(['jour', 'creneau_horaire'])
+            df.reset_index(inplace=True, drop=True) 
             
-            for activity in rep:
-                jour = activity['jour'].capitalize()
-                creneau_horaire = activity['horaireDebut'] + ' - ' + activity['horaireFin']
-                lieu = activity['localisation']['nom']
-                
-                activities_list.append({
-                    'activity_name': activity_name,
-                    'activity_id': activity_id,
-                    'jour': jour,
-                    'creneau_horaire': creneau_horaire,
-                    'lieu' : lieu,
-                    'places_restantes' : activity['quota'] - activity['nbInscrits'],
-                    'id': activity['id']
-                })
-        
-        df = pd.DataFrame(activities_list)
-        df['jour'] = pd.Categorical(df['jour'], categories=ordered_days, ordered=True)
-        df = df.sort_values(['jour', 'creneau_horaire'])
-        df.reset_index(inplace=True, drop=True) 
-        
-        return df
+            return df
         
     def printIDs(self) :
         print(self.getActivitiesInfo().drop(["activity_id"], axis = 1))
@@ -176,12 +171,13 @@ class AutoSUAPS :
         else :
             liste_indexes = []
             for id_creneau in liste_input : 
-                
                 for i in range(df.shape[0]) : 
                     if id_creneau == df.iloc[i]['id'] :
-                        liste_indexes.append(i)
+                        liste_indexes.append(i)   
+         
                                    
         for index_input in liste_indexes :
+            print(datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S"), end=' - ')
             try :
                 activity_id = df.iloc[index_input]['activity_id']
                 creneau_id = df.iloc[index_input]['id']
@@ -198,7 +194,8 @@ class AutoSUAPS :
                         print(f'Erreur d\'inscription pour le créneau {df.iloc[index_input]["activity_name"]}')
                 
                 else :
-                    print(f'Pas de places restantes pour le créneau {df.iloc[index_input]["activity_name"]}')
+                    print(f'Pas de places restantes pour le créneau {df.iloc[index_input]["id"]}')
+        print()
 
 
     def poster_requete(self, id_creneau, id_activite):
@@ -235,6 +232,7 @@ class AutoSUAPS :
 
         return rep.status_code == 201
     
-    def logout(self) : self.session.close()
+    def logout(self) : 
+        self.session.close()
     
     
