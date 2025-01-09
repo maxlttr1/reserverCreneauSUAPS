@@ -175,9 +175,8 @@ class AutoSUAPS :
                     if id_creneau == df.iloc[i]['id'] :
                         liste_indexes.append(i)   
          
-                                   
+        print(datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S"), end='\n\t - ')                   
         for index_input in liste_indexes :
-            print(datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S"), end=' - ')
             try :
                 activity_id = df.iloc[index_input]['activity_id']
                 creneau_id = df.iloc[index_input]['id']
@@ -191,10 +190,10 @@ class AutoSUAPS :
                         print(f"Inscription effectuée en {df.iloc[index_input]['activity_name']}, le {df.iloc[index_input]['jour']} pour le créneau de {df.iloc[index_input]['creneau_horaire']}")
 
                     else :
-                        print(f'Erreur d\'inscription pour le créneau {df.iloc[index_input]["activity_name"]}')
+                        print(f"Erreur d'inscription en {df.iloc[index_input]['activity_name']}, le {df.iloc[index_input]['jour']} pour le créneau de {df.iloc[index_input]['creneau_horaire']}")
                 
                 else :
-                    print(f'Pas de places restantes pour le créneau {df.iloc[index_input]["id"]}')
+                    print(f"Pas de place en {df.iloc[index_input]['activity_name']}, le {df.iloc[index_input]['jour']} pour le créneau de {df.iloc[index_input]['creneau_horaire']}")
         print()
 
 
