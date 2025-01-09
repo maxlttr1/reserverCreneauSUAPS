@@ -6,7 +6,6 @@ import schedule
 
 load_dotenv()
 
-LOGIN_URL = getenv("LOGIN_URL")
 USERNAME = getenv("USERNAME")
 PASSWORD = getenv("PASSWORD")
 
