@@ -17,7 +17,9 @@ class AutoSUAPS :
         
         # On se connecte et on set l'id de la période en cours (pour économiser des requêtes)
         self.login_csa6(LOGIN_URL)
-        self.setIDPeriode()
+        # self.setIDPeriode() 
+        # Fix : "tkt", plus simple comme ça
+        self.id_periode = 'bcb3698e-015d-4577-858b-c4cb646ea7a6'
 
     def login_csa6(self, LOGIN_URL) -> None :
         '''
@@ -110,12 +112,12 @@ class AutoSUAPS :
         '''
         activities_list = []
         ordered_days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
-        
         for activity_id in self.getActivities():
             URL = f'https://u-sport.univ-nantes.fr/api/extended/creneau-recurrents/semaine?idActivite={activity_id}&idPeriode={self.id_periode}&idIndividu={self.username}'
             rep = self.session.get(URL).json()
 
-            if activity_name := rep[0]["activite"]['nom'] :
+            if len(rep) > 0 : 
+                activity_name = rep[0]["activite"]['nom']
                 for activity in rep:
                     jour = activity['jour'].capitalize()
                     creneau_horaire = activity['horaireDebut'] + ' - ' + activity['horaireFin']
@@ -131,12 +133,12 @@ class AutoSUAPS :
                         'id': activity['id']
                     })
             
-            df = pd.DataFrame(activities_list)
-            df['jour'] = pd.Categorical(df['jour'], categories=ordered_days, ordered=True)
-            df = df.sort_values(['jour', 'creneau_horaire'])
-            df.reset_index(inplace=True, drop=True) 
+        df = pd.DataFrame(activities_list)
+        df['jour'] = pd.Categorical(df['jour'], categories=ordered_days, ordered=True)
+        df = df.sort_values(['jour', 'creneau_horaire'])
+        df.reset_index(inplace=True, drop=True) 
             
-            return df
+        return df
         
     def printIDs(self) :
         print(self.getActivitiesInfo().drop(["activity_id"], axis = 1))
@@ -175,8 +177,9 @@ class AutoSUAPS :
                     if id_creneau == df.iloc[i]['id'] :
                         liste_indexes.append(i)   
          
-        print(datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S"), end='\n\t - ')                   
+        print(datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S"))                   
         for index_input in liste_indexes :
+            print('\t - ', end='')
             try :
                 activity_id = df.iloc[index_input]['activity_id']
                 creneau_id = df.iloc[index_input]['id']

@@ -32,26 +32,28 @@ auto.reserverCreneau(ids_creneaux_a_resa)
 
 
 # 1ère solution
-# auto = AutoSUAPS(USERNAME, PASSWORD) # Décommentez
-# auto.printIDs() # Décommentez
+auto = AutoSUAPS(USERNAME, PASSWORD) # Décommentez
+auto.printIDs() # Décommentez
 
 
 # 2ème solution
 ids_creneaux_a_resa = ['a67c920a-fc66-452c-8d07-5d7206a44f5b', 
                        'c12b09b0-8660-4b3c-9711-983317af0441',
-                       '6ab242fa-79cd-435a-a71b-5dceb122b775']
+                       '6ab242fa-79cd-435a-a71b-5dceb122b775',
+                       'eba1eb76-55b8-4ae4-a067-6182f3e6707b']
 
 def actions(creneaux = ids_creneaux_a_resa) :
     auto = AutoSUAPS(USERNAME, PASSWORD)
     auto.reserverCreneau(creneaux)
 
+
 if __name__ == '__main__' :
     
     # Adapter selon jour & heure
-    schedule.every().saturday.at("12:02").do(actions)
-    schedule.every().thursday.at("19:32").do(actions)
+    schedule.every().saturday.at("12:01").do(actions)
+    schedule.every().thursday.at("19:31").do(actions)
+    schedule.every().tuesday.at("20:01").do(actions)
 
     while True:
         schedule.run_pending()
         time.sleep(60)
-    
