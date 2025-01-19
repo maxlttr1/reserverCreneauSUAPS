@@ -3,6 +3,7 @@ import requests
 import json
 from bs4 import BeautifulSoup
 import pandas as pd
+import schedule
 
 class AutoSUAPS :
     def __init__(self, username, password, LOGIN_URL = 'https://cas6n.univ-nantes.fr/esup-cas-server/login?service=https%3A%2F%2Fu-sport.univ-nantes.fr%2Fcas%2F') :
@@ -236,5 +237,30 @@ class AutoSUAPS :
     
     def logout(self) : 
         self.session.close()
-    
-    
+
+def readJSON() :
+    with open('config.json', 'r') as file :
+        return dict(json.load(file))
+
+def setSchedule(day, hour, actions) :
+    match day :
+        case "lundi" :
+            schedule.every().monday.at(hour).do(actions)
+        case "mardi" :
+            schedule.every().tuesday.at(hour).do(actions)
+        case "mercredi" :
+            schedule.every().wednesday.at(hour).do(actions)
+        case "jeudi" :
+            schedule.every().thursday.at(hour).do(actions)
+        case "vendredi" :
+            schedule.every().friday.at(hour).do(actions)
+        case "samedi" :
+            schedule.every().saturday.at(hour).do(actions)
+        case "dimanche" :
+            schedule.every().sunday.at(hour).do(actions)
+
+def setAllSchedules(actions) :
+    dico = readJSON()
+    for day in dico["days"] :
+        for hour in dico["days"][day] :
+            setSchedule(day, hour, actions)

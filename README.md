@@ -15,7 +15,8 @@ Ce que vous devez faire :
 ```bash
 git clone https://github.com/flash2974/reserverCreneauSUAPS
 ```
-- Renommer `.example.env` en `.env`, l'ouvrir et remplir les champs **USERNAME** et **PASSWORD** 
+- Renommer `.example.env` en `.env`, l'ouvrir et remplir les champs **USERNAME** et **PASSWORD**
+- Renommer `example.config.json` en `config.json` et y apporter des modifications, pour changer ses horaires d'inscription
 
 <br>
 
@@ -30,16 +31,8 @@ Sinon :
 1. Installez tous les modules nécessaires avec :
     ```bash
     pip install -r requirements.txt
-    ```
-
-    Si pip n'est pas trouvé, essayez : 
-    ```bash
+    # ou
     python.exe -m pip install -r requirements.txt
     ```
 
-2. Lancez `main.py` : 
-   - Soit dans un IDE
-   - Soit dans un terminal avec : 
-        ```bash
-        python main.py
-        ```
+2. Lancez `main.py`
