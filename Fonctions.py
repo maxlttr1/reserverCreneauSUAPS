@@ -261,6 +261,6 @@ def setSchedule(day, hour, actions) :
 
 def setAllSchedules(actions) :
     dico = readJSON()
-    for day in dico["days"] :
-        for hour in dico["days"][day] :
+    for day in dico["jours"] :
+        for hour in dico["jours"][day] :
             setSchedule(day, hour, actions)
