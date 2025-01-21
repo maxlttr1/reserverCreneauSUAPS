@@ -6,7 +6,7 @@ import pandas as pd
 import schedule
 
 class AutoSUAPS :
-    def __init__(self, username, password, LOGIN_URL = 'https://cas6n.univ-nantes.fr/esup-cas-server/login?service=https%3A%2F%2Fu-sport.univ-nantes.fr%2Fcas%2F') :
+    def __init__(self, username, password) :
         '''Permet de gérer les réservations de créneaux pour le SUAPS
         @param username: identifiant de l'université
         @param password: mot de passe
@@ -16,13 +16,11 @@ class AutoSUAPS :
         self.password = password
         self.session = requests.Session()
         
-        # On se connecte et on set l'id de la période en cours (pour économiser des requêtes)
-        self.login_csa6(LOGIN_URL)
         # self.setIDPeriode() 
         # Fix : "tkt", plus simple comme ça
         self.id_periode = 'bcb3698e-015d-4577-858b-c4cb646ea7a6'
 
-    def login_csa6(self, LOGIN_URL) -> None :
+    def login(self, LOGIN_URL = 'https://cas6n.univ-nantes.fr/esup-cas-server/login?service=https%3A%2F%2Fu-sport.univ-nantes.fr%2Fcas%2F') -> None :
         '''
         Permet de se connecter à son compte de l'université avec son username et password.
         
@@ -178,7 +176,7 @@ class AutoSUAPS :
                     if id_creneau == df.iloc[i]['id'] :
                         liste_indexes.append(i)   
          
-        print(datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S"))                   
+        print(datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S"))
         for index_input in liste_indexes :
             print('\t - ', end='')
             try :
@@ -237,30 +235,3 @@ class AutoSUAPS :
     
     def logout(self) : 
         self.session.close()
-
-def readJSON() :
-    with open('config.json', 'r') as file :
-        return dict(json.load(file))
-
-def setSchedule(day, hour, actions) :
-    match day :
-        case "lundi" :
-            schedule.every().monday.at(hour).do(actions)
-        case "mardi" :
-            schedule.every().tuesday.at(hour).do(actions)
-        case "mercredi" :
-            schedule.every().wednesday.at(hour).do(actions)
-        case "jeudi" :
-            schedule.every().thursday.at(hour).do(actions)
-        case "vendredi" :
-            schedule.every().friday.at(hour).do(actions)
-        case "samedi" :
-            schedule.every().saturday.at(hour).do(actions)
-        case "dimanche" :
-            schedule.every().sunday.at(hour).do(actions)
-
-def setAllSchedules(actions) :
-    dico = readJSON()
-    for day in dico["jours"] :
-        for hour in dico["jours"][day] :
-            setSchedule(day, hour, actions)
