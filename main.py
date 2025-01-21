@@ -72,7 +72,7 @@ if __name__ == '__main__' :
         if counter % 60 == 0 :
             next_run = schedule.next_run()
             if next_run != old_run :
-                print(f"Prochaine exécution : {schedule.next_run().strftime("%d-%m-%Y %H:%M:%S")}")
+                print(f"Prochaine exécution : {schedule.next_run().strftime('%d-%m-%Y %H:%M:%S')}")
                 old_run = next_run
             
         time.sleep(60)
