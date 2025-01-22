@@ -63,7 +63,7 @@ if __name__ == '__main__' :
     setAllSchedules(auto)
     counter = 0
     old_run = datetime.datetime(1970, 1, 1)
-    while datetime.datetime.now().second != 0 :
+    while getParisDatetime().second != 0 :
         time.sleep(1)
 
     while True :

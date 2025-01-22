@@ -1,9 +1,13 @@
 import datetime
+import pytz
 import requests
 import json
 from bs4 import BeautifulSoup
 import pandas as pd
-import schedule
+
+
+def getParisDatetime() :
+    return datetime.datetime.now(pytz.timezone('Europe/Paris'))
 
 class AutoSUAPS :
     def __init__(self, username, password) :
@@ -72,7 +76,7 @@ class AutoSUAPS :
             self.id_periode = rep.json()['id']
 
         else :
-            todayDate = datetime.datetime.today()
+            todayDate = getParisDatetime()
             dates = {}
             for periode in rep.json() :
                 id = periode['id']
@@ -176,7 +180,7 @@ class AutoSUAPS :
                     if id_creneau == df.iloc[i]['id'] :
                         liste_indexes.append(i)   
          
-        print(datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S"))
+        print(getParisDatetime().strftime("%d-%m-%Y %H:%M:%S"))
         for index_input in liste_indexes :
             print('\t - ', end='')
             try :
@@ -210,7 +214,7 @@ class AutoSUAPS :
                 "login": self.username,
                 "typeUtilisateur": self.getEtudiant()["type"]
             },
-            'dateReservation': datetime.datetime.now().isoformat(timespec='milliseconds') + 'Z',
+            'dateReservation': getParisDatetime().isoformat(timespec='milliseconds') + 'Z',
             'actif': False,
             'forcage': False,
             'creneau': self.getCreneau(id_creneau,id_activite),
