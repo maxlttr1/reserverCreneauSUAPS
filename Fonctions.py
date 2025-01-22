@@ -192,7 +192,7 @@ class AutoSUAPS :
                 return
             else :
                 if places_restantes > 0 :
-                    if res :=self.poster_requete(creneau_id, activity_id) == 201:
+                    if (res :=self.poster_requete(creneau_id, activity_id)) == 201:
                         print(f"Inscription effectuée en {df.iloc[index_input]['activity_name']}, le {df.iloc[index_input]['jour']} pour le créneau de {df.iloc[index_input]['creneau_horaire']}")
 
                     else :
@@ -214,7 +214,7 @@ class AutoSUAPS :
                 "login": self.username,
                 "typeUtilisateur": self.getEtudiant()["type"]
             },
-            'dateReservation': getParisDatetime().isoformat(timespec='milliseconds') + 'Z',
+            'dateReservation': datetime.datetime.now().isoformat(timespec='milliseconds') + 'Z',
             'actif': False,
             'forcage': False,
             'creneau': self.getCreneau(id_creneau,id_activite),
