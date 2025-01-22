@@ -192,11 +192,11 @@ class AutoSUAPS :
                 return
             else :
                 if places_restantes > 0 :
-                    if self.poster_requete(creneau_id, activity_id) :
+                    if res :=self.poster_requete(creneau_id, activity_id) == 201:
                         print(f"Inscription effectuée en {df.iloc[index_input]['activity_name']}, le {df.iloc[index_input]['jour']} pour le créneau de {df.iloc[index_input]['creneau_horaire']}")
 
                     else :
-                        print(f"Erreur d'inscription en {df.iloc[index_input]['activity_name']}, le {df.iloc[index_input]['jour']} pour le créneau de {df.iloc[index_input]['creneau_horaire']}")
+                        print(f"Erreur {res} d'inscription en {df.iloc[index_input]['activity_name']}, le {df.iloc[index_input]['jour']} pour le créneau de {df.iloc[index_input]['creneau_horaire']}")
                 
                 else :
                     print(f"Pas de place en {df.iloc[index_input]['activity_name']}, le {df.iloc[index_input]['jour']} pour le créneau de {df.iloc[index_input]['creneau_horaire']}")
@@ -235,7 +235,7 @@ class AutoSUAPS :
                                 data = post_data_json, 
                                 headers = headers)
 
-        return rep.status_code == 201
+        return rep.status_code
     
     def logout(self) : 
         self.session.close()
