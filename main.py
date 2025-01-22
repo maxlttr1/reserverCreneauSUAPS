@@ -37,19 +37,19 @@ def actions(auto : AutoSUAPS) :
 def setSchedule(day, hour, auto) :
     match day :
         case "lundi" :
-            schedule.every().monday.at(hour).do(actions, auto)
+            schedule.every().monday.at(hour, "Europe/Paris").do(actions, auto)
         case "mardi" :
-            schedule.every().tuesday.at(hour).do(actions, auto)
+            schedule.every().tuesday.at(hour, "Europe/Paris").do(actions, auto)
         case "mercredi" :
-            schedule.every().wednesday.at(hour).do(actions, auto)
+            schedule.every().wednesday.at(hour, "Europe/Paris").do(actions, auto)
         case "jeudi" :
-            schedule.every().thursday.at(hour).do(actions, auto)
+            schedule.every().thursday.at(hour, "Europe/Paris").do(actions, auto)
         case "vendredi" :
-            schedule.every().friday.at(hour).do(actions, auto)
+            schedule.every().friday.at(hour, "Europe/Paris").do(actions, auto)
         case "samedi" :
-            schedule.every().saturday.at(hour).do(actions, auto)
+            schedule.every().saturday.at(hour, "Europe/Paris").do(actions, auto)
         case "dimanche" :
-            schedule.every().sunday.at(hour).do(actions, auto)
+            schedule.every().sunday.at(hour, "Europe/Paris").do(actions, auto)
 
 def setAllSchedules(auto) :
     dico = readJSON()
@@ -69,7 +69,7 @@ if __name__ == '__main__' :
     while True :
         schedule.run_pending()
         
-        if counter % 60 == 0 :
+        if counter % 10 == 0 :
             next_run = schedule.next_run()
             if next_run != old_run :
                 print(f"Prochaine exécution : {schedule.next_run().strftime('%d-%m-%Y %H:%M:%S')}")
