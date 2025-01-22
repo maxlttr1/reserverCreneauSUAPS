@@ -15,9 +15,9 @@ class AutoSUAPS :
         self.username = username
         self.password = password
         
-        self.setIDPeriode() 
+        #self.setIDPeriode() 
         # Fix : "tkt", plus simple comme ça
-        #self.id_periode = 'bcb3698e-015d-4577-858b-c4cb646ea7a6'
+        self.id_periode = 'bcb3698e-015d-4577-858b-c4cb646ea7a6'
 
     def login(self, LOGIN_URL = 'https://cas6n.univ-nantes.fr/esup-cas-server/login?service=https%3A%2F%2Fu-sport.univ-nantes.fr%2Fcas%2F') -> None :
         '''
