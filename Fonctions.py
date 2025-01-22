@@ -14,9 +14,8 @@ class AutoSUAPS :
         '''
         self.username = username
         self.password = password
-        self.session = requests.Session()
         
-        # self.setIDPeriode() 
+        #self.setIDPeriode() 
         # Fix : "tkt", plus simple comme ça
         self.id_periode = 'bcb3698e-015d-4577-858b-c4cb646ea7a6'
 
@@ -27,6 +26,7 @@ class AutoSUAPS :
         Paramètres :
         - LOGIN_URL : URL à rejoindre pour envoyer la requête
         '''
+        self.session = requests.Session()
         r = self.session.get(LOGIN_URL)
 
         page_login = BeautifulSoup(r.text, 'html.parser')
