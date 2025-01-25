@@ -20,6 +20,9 @@ git clone https://github.com/flash2974/reserverCreneauSUAPS
 
 <br>
 
+Pour la première fois, je vous conseille de lancer `main.py` en local, afin de noter les IDs des créneaux que vous voulez réserver.
+Ensuite, mettez tout ça dans `config.json`, et démarrez le conteneur Docker, qui utilise le fichier `run_auto.py`.
+
 Si vous utilisez Docker :
 ```bash
 docker-compose up -d
