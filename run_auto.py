@@ -44,6 +44,10 @@ def setAllSchedules(auto) :
 
 if __name__ == '__main__' :
     auto = AutoSUAPS(USERNAME, PASSWORD)
+    
+    auto.login()
+    auto.printIDs()
+
     setAllSchedules(auto)
     counter = 0
     old_run = datetime.datetime(1970, 1, 1)

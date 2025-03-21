@@ -1,4 +1,4 @@
-.env
 venv
+config/.env
+config/example.config.json
 __pycache__
-config.json
