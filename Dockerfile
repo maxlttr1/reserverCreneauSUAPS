@@ -9,4 +9,4 @@ COPY . .
 
 RUN pip install --no-cache-dir -r config/requirements.txt
 
-CMD ["python", "-u", "run_auto.py"]
+CMD ["python", "-u", "src/run_auto.py"]
