@@ -47,6 +47,7 @@ if __name__ == '__main__' :
     
     auto.login()
     auto.printIDs()
+    auto.logout()
 
     setAllSchedules(auto)
     counter = 0

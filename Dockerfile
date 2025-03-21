@@ -7,6 +7,6 @@ VOLUME ["/app"]
 
 COPY . .
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r config/requirements.txt
 
 CMD ["python", "-u", "run_auto.py"]
