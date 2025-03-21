@@ -6,27 +6,34 @@ Tout se fait avec des requêtes GET/POST. J'ai utilisé [Burp Suite](https://por
 
 Tout ce dont vous aurez besoin, c'est de votre username et password, et je suppose qu'il faut que vous ayez adhéré au SUAPS.
 
-Deux manières de fonctionner :
+**Deux manières de fonctionner :**
 - "Basique" : le programme renvoie un tableau avec tous les IDs des activités, vous choisissez celles que vous voulez
 - Ou vous rentrez des IDs dans une liste python et c'est très facilement automatisable. Dans ce cas, utilisez le module `schedule`, pour régler le jour et l'heure de vos réservations.
 
-Ce que vous devez faire : 
+**Ce que vous devez faire :**
 - Cloner le dépot :
 ```bash
-git clone https://github.com/flash2974/reserverCreneauSUAPS
+git clone https://github.com/flash2974/reserverCreneauSUAPS && cd reserverCreneauSUAPS/
 ```
-- Renommer `.example.env` en `.env`, l'ouvrir et remplir les champs **USERNAME** et **PASSWORD**
-- Renommer `example.config.json` en `config.json` et y apporter des modifications, pour changer ses horaires d'inscription
+- Dans `config/` renommer `.example.env` en `.env`, l'ouvrir et remplir les champs **USERNAME** et **PASSWORD**
+- De même renommer `example.config.json` en `config.json` et y apporter des modifications, pour changer ses horaires d'inscription
 
 <br>
 
-Pour la première fois, je vous conseille de lancer `main.py` en local, afin de noter les IDs des créneaux que vous voulez réserver.
-Ensuite, mettez tout ça dans `config.json`, et démarrez le conteneur Docker, qui utilise le fichier `run_auto.py`.
-
 Si vous utilisez Docker :
 ```bash
-docker-compose up -d
+docker compose up -d && \
+sleep 10 && \
+docker logs reservercreneausuaps-app-1
 ```
+- Il vous suffira de reporter les **ID** qui vous intéressent des activités dans le `config.json`.
+- Pour mettre à jour le container:
+
+    ```bash
+    docker compose down && \
+    docker pull maxlttr697/reserver_creneau_suaps:latest && \
+    docker compose up -d
+    ```
 
 <br>
 

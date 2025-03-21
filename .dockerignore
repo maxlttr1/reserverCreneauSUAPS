@@ -1,5 +1,8 @@
-.example.env
-.env
+.git
+.gitignore
+Dockerfile
+docker-compose.yml
+config/config.json
+config/.env
 README.md
 venv
-example.config.json
