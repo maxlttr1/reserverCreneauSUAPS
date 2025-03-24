@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from os import getenv
 import os
 
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '../config/.env'), override=True)
+load_dotenv()
 USERNAME = getenv("USERNAME")
 PASSWORD = getenv("PASSWORD")
 
