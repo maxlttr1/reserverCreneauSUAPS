@@ -3,8 +3,6 @@ RUN pip install --upgrade pip
 
 WORKDIR /app
 
-VOLUME ["/app"]
-
 COPY . .
 
 RUN pip install --no-cache-dir -r config/requirements.txt
