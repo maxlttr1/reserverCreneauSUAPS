@@ -10,7 +10,7 @@ USERNAME = getenv("USERNAME")
 PASSWORD = getenv("PASSWORD")
 
 def readJSON() :            
-    with open('config.json', 'r') as file :
+    with open('../config/config.json', 'r') as file :
         return dict(json.load(file))
     
 def actions(auto : AutoSUAPS) :
@@ -56,7 +56,7 @@ if __name__ == '__main__' :
     while getParisDatetime().second != 0 :
         time.sleep(1)
         
-    actions()
+    actions(auto)
 
     while True :
         schedule.run_pending()
