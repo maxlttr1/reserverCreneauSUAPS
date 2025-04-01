@@ -3,6 +3,6 @@ services:
     build:
       context: .
     volumes:
-      - ./config/config.json:/app/config.json
-      - ./config/.env:/app/.env
+      - ./config/config.json:/app/config/config.json
+      - ./config/.env:/app/config/.env
     restart: unless-stopped

@@ -5,12 +5,14 @@ import time
 import schedule
 import os
 
-load_dotenv()
+BASE_DIR = os.path.dirname(__file__)
+
+load_dotenv(dotenv_path=os.path.join(BASE_DIR, '../config/.env'), override=True)
 USERNAME = getenv("USERNAME")
 PASSWORD = getenv("PASSWORD")
 
-def readJSON() :            
-    with open('config.json', 'r') as file :
+def readJSON() :
+    with open(os.path.join(BASE_DIR, '../config/config.json'), 'r') as file :
         return dict(json.load(file))
     
 def actions(auto : AutoSUAPS) :
@@ -55,6 +57,10 @@ if __name__ == '__main__' :
     old_run = datetime.datetime(1970, 1, 1)
     while getParisDatetime().second != 0 :
         time.sleep(1)
+    
+    actions(auto)
+    
+    
 
     while True :
         schedule.run_pending()
