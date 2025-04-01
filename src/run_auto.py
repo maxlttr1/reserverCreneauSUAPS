@@ -5,13 +5,13 @@ import time
 import schedule
 import os
 
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '../config/.env'), override=True)
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), 'app/config/.env'), override=True)
 USERNAME = getenv("USERNAME")
 PASSWORD = getenv("PASSWORD")
 
 def readJSON() :
     print(os.getcwd())
-    with open('../config/config.json', 'r') as file :
+    with open('app/config/config.json', 'r') as file :
         return dict(json.load(file))
     
 def actions(auto : AutoSUAPS) :
