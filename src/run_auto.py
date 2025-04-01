@@ -9,18 +9,8 @@ load_dotenv()
 USERNAME = getenv("USERNAME")
 PASSWORD = getenv("PASSWORD")
 
-def readJSON() :
-    for root, dirs, files in os.walk('.'):
-        # Afficher le répertoire courant
-        print(f"Répertoire : {root}")
-        # Afficher les sous-répertoires
-        for dir_name in dirs:
-            print(f"  Sous-répertoire : {dir_name}")
-        # Afficher les fichiers dans le répertoire courant
-        for file_name in files:
-            print(f"  Fichier : {file_name}")
-            
-    with open('../config/config.json', 'r') as file :
+def readJSON() :            
+    with open('config.json', 'r') as file :
         return dict(json.load(file))
     
 def actions(auto : AutoSUAPS) :

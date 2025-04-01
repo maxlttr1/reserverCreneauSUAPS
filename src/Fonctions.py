@@ -43,7 +43,7 @@ class AutoSUAPS :
         login_data["username"] = self.username
         login_data["password"] = self.password
 
-        print(self.session.post(r.url, login_data))
+        self.session.post(r.url, login_data)
 
     def getEtudiant(self) -> str :
         '''
