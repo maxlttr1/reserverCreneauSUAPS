@@ -55,6 +55,8 @@ if __name__ == '__main__' :
     old_run = datetime.datetime(1970, 1, 1)
     while getParisDatetime().second != 0 :
         time.sleep(1)
+        
+    actions()
 
     while True :
         schedule.run_pending()
