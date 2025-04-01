@@ -49,14 +49,21 @@ if __name__ == '__main__' :
     auto.login()
     auto.printIDs()
     auto.logout()
+    
+    while True : 
+        time.sleep(1)
 
     setAllSchedules(auto)
     counter = 0
     old_run = datetime.datetime(1970, 1, 1)
     while getParisDatetime().second != 0 :
         time.sleep(1)
-        
+    
+    
+       
     actions(auto)
+    
+    
 
     while True :
         schedule.run_pending()
