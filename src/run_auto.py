@@ -10,6 +10,7 @@ USERNAME = getenv("USERNAME")
 PASSWORD = getenv("PASSWORD")
 
 def readJSON() :
+    print(os.getenv())
     with open('../config/config.json', 'r') as file :
         return dict(json.load(file))
     
