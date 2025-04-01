@@ -6,6 +6,6 @@ WORKDIR /app
 COPY . .
 
 RUN pip install --no-cache-dir -r config/requirements.txt
-RUN mkdir -p /app/config
+# RUN mkdir -p /app/config
 
 CMD ["python", "-u", "src/run_auto.py"]
