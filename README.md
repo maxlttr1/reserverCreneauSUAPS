@@ -15,7 +15,12 @@ Tout ce dont vous aurez besoin, c'est de votre username et password, et je suppo
 ```bash
 git clone https://github.com/flash2974/reserverCreneauSUAPS && cd reserverCreneauSUAPS/
 ```
-- Dans `config/` copier et renommer `.example.env` en `.env`, et `example.config.json` en `config.json`: 
+- Dans `config/` renommer `.example.env` en `.env`, et `example.config.json` en `config.json`: 
+```bash
+mv config/.example.env config/.env && mv config/example.config.json config/config.json
+```
+
+Si vous voulez faire des pulls requests, copiez et renommez.
 ```bash
 cp config/.example.env config/.env && cp config/example.config.json config/config.json
 ```
@@ -36,9 +41,9 @@ docker logs reservercreneausuaps-app-1
 - Pour mettre à jour le container:
 
     ```bash
-    git pull && \
     docker compose down && \
-    docker compose up -d
+    git pull && \
+    docker compose up -d --build
     ```
 
 <br>
