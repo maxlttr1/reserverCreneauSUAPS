@@ -9,7 +9,8 @@ load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '../config/.env'
 USERNAME = getenv("USERNAME")
 PASSWORD = getenv("PASSWORD")
 
-def readJSON() :            
+def readJSON() :
+    print(os.getcwd())
     with open('../config/config.json', 'r') as file :
         return dict(json.load(file))
     
@@ -49,10 +50,6 @@ if __name__ == '__main__' :
     auto.login()
     auto.printIDs()
     auto.logout()
-    
-    while True : 
-        time.sleep(1)
-        print('helo')
 
     setAllSchedules(auto)
     counter = 0
@@ -60,8 +57,6 @@ if __name__ == '__main__' :
     while getParisDatetime().second != 0 :
         time.sleep(1)
     
-    
-       
     actions(auto)
     
     
