@@ -12,22 +12,18 @@ Tout ce dont vous aurez besoin, c'est de votre username et password, et je suppo
 
 **Ce que vous devez faire :**
 - Cloner le dépot :
-```bash
-git clone https://github.com/flash2974/reserverCreneauSUAPS && cd reserverCreneauSUAPS/
-```
-- Dans `config/` renommer `.example.env` en `.env`, et `example.config.json` en `config.json`: 
-```bash
-mv config/.example.env config/.env && mv config/example.config.json config/config.json
-```
+    ```bash
+    git clone https://github.com/flash2974/reserverCreneauSUAPS && cd reserverCreneauSUAPS/
+    ```
+- Dans `config/` renommer `.example.env` en `.env`, et `example.config.json` en `config.json` (1) : 
+    ```bash
+    mv config/.example.env config/.env && mv config/example.config.json config/config.json
+    ```
 
-Si vous voulez faire des pulls requests, copiez et renommez.
-```bash
-cp config/.example.env config/.env && cp config/example.config.json config/config.json
-```
 - Ouvrir le fichier `.env` et remplir les champs **USERNAME** et **PASSWORD**
-```bash
-echo -e "USERNAME=username\nPASSWORD=mdp" > config/.env
-```
+    ```bash
+    echo -e "USERNAME=username\nPASSWORD=mdp" > config/.env
+    ```
 
 <br>
 
@@ -61,5 +57,14 @@ Sinon :
 ### TODO :
 - fix `setIdPeriode()` dans `Fonctions.py` qui fixe le mauvais ID de période une semaine avant la période "spéciale" (Noël)
 
+<br>
+<br>
 
-Merci à `@maxlttr` pour son aide !
+(1) Si vous voulez faire des pulls requests, copiez et renommez.
+```bash
+cp config/.example.env config/.env && cp config/example.config.json config/config.json
+```
+
+<br>
+
+Merci à [maxlttr](https://github.com/maxlttr1) pour son aide !
