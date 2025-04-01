@@ -53,6 +53,8 @@ if __name__ == '__main__' :
     auto.logout()
 
     setAllSchedules(auto)
+    
+    # Pour que les schedule commencent à 0 secondes pile !
     counter = 0
     old_run = datetime.datetime(1970, 1, 1)
     while getParisDatetime().second != 0 :
@@ -61,7 +63,6 @@ if __name__ == '__main__' :
     actions(auto)
     
     
-
     while True :
         schedule.run_pending()
         
@@ -70,6 +71,10 @@ if __name__ == '__main__' :
             if next_run != old_run :
                 print(f"Prochaine exécution : {next_run.astimezone(pytz.timezone('Europe/Paris')).strftime('%d-%m-%Y %H:%M:%S')}")
                 old_run = next_run
+                
+        
+        if counter % 1440 == 0 :
+            setAllSchedules(auto)
             
         time.sleep(60)
         counter += 1
