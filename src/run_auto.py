@@ -10,7 +10,7 @@ USERNAME = getenv("USERNAME")
 PASSWORD = getenv("PASSWORD")
 
 def readJSON() :
-    with open('config.json', 'r') as file :
+    with open('../config/config.json', 'r') as file :
         return dict(json.load(file))
     
 def actions(auto : AutoSUAPS) :

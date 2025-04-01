@@ -1,6 +1,10 @@
 services:
   app:
-    image: maxlttr697/reserver_creneau_suaps:latest
+    build:
+      context: .
+    env_file:
+      - .env # Variables d'environnement
+    # image: maxlttr697/reserver_creneau_suaps:latest
     volumes:
       - ./config/config.json:/app/config.json
       - ./config/.env:/app/.env
