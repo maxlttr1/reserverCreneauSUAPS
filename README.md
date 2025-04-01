@@ -66,4 +66,4 @@ cp config/.example.env config/.env && cp config/example.config.json config/confi
 ```
 
 <br>
-Merci à `@maxlttr` pour son aide !
+Merci à [maxlttr](https://github.com/maxlttr1) pour son aide !
