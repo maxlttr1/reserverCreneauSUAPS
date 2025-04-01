@@ -9,7 +9,7 @@ load_dotenv()
 USERNAME = getenv("USERNAME")
 PASSWORD = getenv("PASSWORD")
 
-def readJSON() :
+def readJSON() :            
     with open('config.json', 'r') as file :
         return dict(json.load(file))
     

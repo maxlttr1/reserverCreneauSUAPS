@@ -19,7 +19,7 @@ class AutoSUAPS :
         self.username = username
         self.password = password
         
-        #self.setIDPeriode() 
+        # self.setIDPeriode() 
         # Fix : "tkt", plus simple comme ça
         self.id_periode = 'bcb3698e-015d-4577-858b-c4cb646ea7a6'
 
@@ -64,6 +64,7 @@ class AutoSUAPS :
                 return creneau
         return None
 
+    # TODO: fix setId periode pour toujours prendre la date la plus proche en-dessous
     def setIDPeriode(self) -> str :
         '''
         Fait une requête pour savoir quel catalogue utiliser, selon la date actuelle. 

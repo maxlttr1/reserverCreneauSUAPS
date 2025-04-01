@@ -52,3 +52,9 @@ Sinon :
     ```
 
 2. Lancez `main.py`
+
+### TODO :
+- fix `setIdPeriode()` dans `Fonctions.py` qui fixe le mauvais ID de période une semaine avant la période "spéciale" (Noël)
+
+
+Merci à `@maxlttr` pour son aide !
