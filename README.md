@@ -15,9 +15,9 @@ Tout ce dont vous aurez besoin, c'est de votre username et password, et je suppo
 ```bash
 git clone https://github.com/flash2974/reserverCreneauSUAPS && cd reserverCreneauSUAPS/
 ```
-- Dans `config/` renommer `.example.env` en `.env`: 
+- Dans `config/` copier et renommer `.example.env` en `.env`, et `example.config.json` en `config.json`: 
 ```bash
-mv config/.example.env config/.env && mv config/example.config.json config/config.json
+cp config/.example.env config/.env && cp config/example.config.json config/config.json
 ```
 - Ouvrir le fichier `.env` et remplir les champs **USERNAME** et **PASSWORD**
 ```bash
