@@ -57,9 +57,13 @@ Sinon :
 ### TODO :
 - fix `setIdPeriode()` dans `Fonctions.py` qui fixe le mauvais ID de période une semaine avant la période "spéciale" (Noël)
 
+<br>
+<br>
+
 (1) Si vous voulez faire des pulls requests, copiez et renommez.
 ```bash
 cp config/.example.env config/.env && cp config/example.config.json config/config.json
 ```
+
 <br>
 Merci à `@maxlttr` pour son aide !
