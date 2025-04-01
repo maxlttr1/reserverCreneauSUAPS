@@ -145,7 +145,8 @@ class AutoSUAPS :
         return df
         
     def printIDs(self) :
-        print(self.getActivitiesInfo().drop(["activity_id"], axis = 1).to_string(index=False))
+        df = self.getActivitiesInfo().drop(["activity_id"], axis=1)
+        print(df.to_string(index=False))
     
     def reserverCreneau(self, liste_input : list[str] = []) :
         '''

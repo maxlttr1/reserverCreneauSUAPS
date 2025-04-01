@@ -4,5 +4,7 @@ Dockerfile
 docker-compose.yml
 config/config.json
 config/.env
+config/.example.config.json
+config/.example.env
 README.md
 venv
