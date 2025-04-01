@@ -15,8 +15,14 @@ Tout ce dont vous aurez besoin, c'est de votre username et password, et je suppo
 ```bash
 git clone https://github.com/flash2974/reserverCreneauSUAPS && cd reserverCreneauSUAPS/
 ```
-- Dans `config/` renommer `.example.env` en `.env`, l'ouvrir et remplir les champs **USERNAME** et **PASSWORD**
-- De même renommer `example.config.json` en `config.json` et y apporter des modifications, pour changer ses horaires d'inscription
+- Dans `config/` renommer `.example.env` en `.env`: 
+```bash
+mv config/.example.env config/.env && mv config/example.config.json config/config.json
+```
+- Ouvrir le fichier `.env` et remplir les champs **USERNAME** et **PASSWORD**
+```bash
+echo -e "USERNAME=username\nPASSWORD=mdp" > config/.env
+```
 
 <br>
 
@@ -26,12 +32,12 @@ docker compose up -d && \
 sleep 10 && \
 docker logs reservercreneausuaps-app-1
 ```
-- Il vous suffira de reporter les **ID** qui vous intéressent des activités dans le `config.json`.
+- Il vous suffira de reporter les **ID** qui vous intéressent des activités dans le `config.json` et de changer les horaires d'inscriptions.
 - Pour mettre à jour le container:
 
     ```bash
+    git pull && \
     docker compose down && \
-    docker pull maxlttr697/reserver_creneau_suaps:latest && \
     docker compose up -d
     ```
 

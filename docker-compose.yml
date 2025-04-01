@@ -1,6 +1,7 @@
 services:
   app:
-    image: maxlttr697/reserver_creneau_suaps:latest
+    build:
+      context: .
     volumes:
       - ./config/config.json:/app/config.json
       - ./config/.env:/app/.env
