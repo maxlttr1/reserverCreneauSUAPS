@@ -1,13 +1,9 @@
+from utilities import *
 import datetime
-import pytz
 import requests
 import json
 from bs4 import BeautifulSoup
 import pandas as pd
-
-
-def getParisDatetime() :
-    return datetime.datetime.now(pytz.timezone('Europe/Paris'))
 
 class AutoSUAPS :
     def __init__(self, username, password) :
@@ -143,65 +139,61 @@ class AutoSUAPS :
         df.reset_index(inplace=True, drop=True) 
             
         return df
+    
+    
+    def getSchedules(self, liste_input: list[str] = readJSON()) :
+        df = self.getActivitiesInfo()
+        filtered_rows = df[df['id'].isin(liste_input)]
+
+        res = []
+        for _, row in filtered_rows.iterrows():
+            id = row['id']
+            day = row['jour'].lower()
+            
+            end_time = datetime.datetime.strptime(row['creneau_horaire'].split(' - ')[1], "%H:%M")
+
+            # Ajouter 3 minutes
+            end_time_plus_1 = end_time + datetime.timedelta(minutes=1)
+            hour = end_time_plus_1.strftime("%H:%M")
+            
+            res.append({'id': id, "day" : day, "hour" : hour})
+        
+        return res
         
     def printIDs(self) :
         df = self.getActivitiesInfo().drop(["activity_id"], axis=1)
         print(df.to_string(index=False))
+        
     
-    def reserverCreneau(self, liste_input : list[str] = []) :
+    def reserverCreneau(self, liste_input: list[str] = readJSON()):
         '''
-        Affiche la data frame et prend un input utilisateur pour réserver un créneau
-        Si aucun argument n'est spécifié, on print le tableau et on demande à l'utilisateur de saisir les créneaux qu'il veut.
-        Sinon, on réserve les créneaux de *args.
+        Réserve les créneaux spécifiés en arguments (liste d'ids)
         '''
         df = self.getActivitiesInfo()
-        
-        if liste_input == [] :
-            print(df.drop(['activity_id', 'id'], axis=1))
-        
-            input_user = input('Entrez le numéro des créneaux que vous voulez réserver, avec des espaces.\nPar exemple, 10 2 réserve les créeaux 10 et 2\n$> ')
-            liste_indexes = input_user.split(' ')
-            
-            if None in liste_indexes :
-                liste_indexes.pop(None)
-            
-            if '' in liste_indexes :
-                liste_indexes.pop('')
-                
-            try :
-                liste_indexes = list(map(lambda x : int(x), liste_indexes))
-        
-            except ValueError :
-                print('Entrée non valide')
-                return
-        
-        else :
-            liste_indexes = []
-            for id_creneau in liste_input : 
-                for i in range(df.shape[0]) : 
-                    if id_creneau == df.iloc[i]['id'] :
-                        liste_indexes.append(i)   
-         
+    
+        # Trouver les indices des créneaux directement avec pandas
+        liste_indexes = df[df['id'].isin(liste_input)].index.tolist()
+    
         print(getParisDatetime().strftime("%d-%m-%Y %H:%M:%S"))
-        for index_input in liste_indexes :
+    
+        for index_input in liste_indexes:
             print('\t - ', end='')
-            try :
-                activity_id = df.iloc[index_input]['activity_id']
-                creneau_id = df.iloc[index_input]['id']
-                places_restantes = df.iloc[index_input]['places_restantes']
+            try:
+                row = df.iloc[index_input]
+                activity_id = row['activity_id']
+                creneau_id = row['id']
+                places_restantes = row['places_restantes']
             except :
-                print('Valeur d\'index non valide')
-                return
-            else :
-                if places_restantes > 0 :
-                    if (res :=self.poster_requete(creneau_id, activity_id)) == 201:
-                        print(f"Inscription effectuée en {df.iloc[index_input]['activity_name']}, le {df.iloc[index_input]['jour']} pour le créneau de {df.iloc[index_input]['creneau_horaire']}")
-
-                    else :
-                        print(f"Erreur {res} d'inscription en {df.iloc[index_input]['activity_name']}, le {df.iloc[index_input]['jour']} pour le créneau de {df.iloc[index_input]['creneau_horaire']}")
-                
-                else :
-                    print(f"Pas de place en {df.iloc[index_input]['activity_name']}, le {df.iloc[index_input]['jour']} pour le créneau de {df.iloc[index_input]['creneau_horaire']}")
+                print('Erreur d\'acces')
+    
+            if places_restantes > 0:
+                res = self.poster_requete(creneau_id, activity_id)
+                if res == 201:
+                    print(f"Inscription effectuée en {row['activity_name']}, le {row['jour']} pour le créneau de {row['creneau_horaire']}")
+                else:
+                    print(f"Erreur {res} d'inscription en {row['activity_name']}, le {row['jour']} pour le créneau de {row['creneau_horaire']}")
+            else:
+                print(f"Pas de place en {row['activity_name']}, le {row['jour']} pour le créneau de {row['creneau_horaire']}")
         print()
 
 

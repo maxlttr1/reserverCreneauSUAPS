@@ -1,48 +1,18 @@
-from Fonctions import *
+from AutoSUAPS import AutoSUAPS
+from utilities import setAllSchedules, getParisDatetime
 from dotenv import load_dotenv
 from os import getenv
-import time
-import schedule
 import os
+import datetime
+import schedule
+import time
+import pytz
 
 BASE_DIR = os.path.dirname(__file__)
 
 load_dotenv(dotenv_path=os.path.join(BASE_DIR, '../config/.env'), override=True)
 USERNAME = getenv("USERNAME")
 PASSWORD = getenv("PASSWORD")
-
-def readJSON() :
-    with open(os.path.join(BASE_DIR, '../config/config.json'), 'r') as file :
-        return dict(json.load(file))
-    
-def actions(auto : AutoSUAPS) :
-    auto.login()
-    liste_creneaux = readJSON()["ids_resa"]
-    auto.reserverCreneau(liste_creneaux)
-    auto.logout()
-
-def setSchedule(day, hour, auto) :
-    match day :
-        case "lundi" :
-            schedule.every().monday.at(hour, "Europe/Paris").do(actions, auto)
-        case "mardi" :
-            schedule.every().tuesday.at(hour, "Europe/Paris").do(actions, auto)
-        case "mercredi" :
-            schedule.every().wednesday.at(hour, "Europe/Paris").do(actions, auto)
-        case "jeudi" :
-            schedule.every().thursday.at(hour, "Europe/Paris").do(actions, auto)
-        case "vendredi" :
-            schedule.every().friday.at(hour, "Europe/Paris").do(actions, auto)
-        case "samedi" :
-            schedule.every().saturday.at(hour, "Europe/Paris").do(actions, auto)
-        case "dimanche" :
-            schedule.every().sunday.at(hour, "Europe/Paris").do(actions, auto)
-
-def setAllSchedules(auto) :
-    dico = readJSON()
-    for day in dico["jours"] :
-        for hour in dico["jours"][day] :
-            setSchedule(day, hour, auto)
 
 
 if __name__ == '__main__' :
@@ -59,10 +29,7 @@ if __name__ == '__main__' :
     old_run = datetime.datetime(1970, 1, 1)
     while getParisDatetime().second != 0 :
         time.sleep(1)
-    
-    actions(auto)
-    
-    
+      
     while True :
         schedule.run_pending()
         
@@ -72,9 +39,9 @@ if __name__ == '__main__' :
                 print(f"Prochaine exécution : {next_run.astimezone(pytz.timezone('Europe/Paris')).strftime('%d-%m-%Y %H:%M:%S')}")
                 old_run = next_run
                 
-        
-        if counter % 1440 == 0 :
-            setAllSchedules(auto)
+        # Re-créer les schedules tous les jours
+        # if counter % 1440 == 0 :
+        #     setAllSchedules(auto)
             
         time.sleep(60)
         counter += 1
