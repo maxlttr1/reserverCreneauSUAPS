@@ -35,7 +35,6 @@ def home():
 
     df = auto.getActivitiesInfo()
     activities_dict = df.to_dict(orient='records')
-    print(activities_dict)
 
     auto.logout()
     return render_template('index.html', config_file=config_file, activities_dict = activities_dict)
@@ -50,6 +49,13 @@ def update():
             config_file["jours"][day] = [time.strip() for time in new_times.split(',')]
         else:
             config_file["jours"][day] = []
+
+    selected_ids = request.form.getlist('id_resa')
+
+    print(selected_ids)
+
+    if selected_ids:
+        config_file["ids_resa"] = list(selected_ids)
 
     save_config(config_file)
 

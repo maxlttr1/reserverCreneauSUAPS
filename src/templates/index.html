@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Flask Web UI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
     <header>
@@ -19,7 +20,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for day, times in config_file.jours.items() %}
+                        {% for day, times in config_file['jours'].items() %}
                             <tr>
                                 <td>{{ day | capitalize }}</td>
                                 <td>
@@ -41,20 +42,20 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Activity Name</th>
-                            <th>Activity ID</th>
-                            <th>Day</th>
-                            <th>Time Slot</th>
-                            <th>Location</th>
-                            <th>Remaining Places</th>
-                            <th>Activity ID (Details)</th>
+                            <th>Sélectionner</th>
+                            <th>Activité</th>
+                            <th>Jour</th>
+                            <th>Horaire</th>
+                            <th>Adresse</th>
+                            <th>Places restantes</th>
+                            <th>Activité ID (Détails)</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for activity in activities_dict %}
                         <tr>
+                            <td><input type="checkbox" name="id_resa" value="{{activity['id']}}"></td>
                             <td>{{activity['activity_name']}}</td>
-                            <td>{{activity['activity_id']}}</td>
                             <td>{{activity['jour']}}</td>
                             <td>{{activity['creneau_horaire']}}</td>
                             <td>{{activity['lieu']}}</td>
@@ -64,6 +65,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <button type="submit">Sauvegarder</button>
             </form>
         </section>
     </main>
