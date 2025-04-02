@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Flask Web UI</title>
+</head>
+<body>
+    <header>
+        <h1>Web ui pour configurer ses choix</h1>
+    </header>
+    <main>
+        <form method="POST">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Jours</th>
+                        <th>Heure de réservation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day, time in config_file.jours.items() %}
+                        <tr>
+                            <td>{{ day | capitalize }}</td>
+                            <td>
+                                {% if time %}
+                                    <p>{{ time | join(', ') }}</p> <!--  to remove  [''] from the number format -->
+                                {% else %}
+                                    Pas d'heure de réservation
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+    </main>
+    
+    <footer>
+
+    </footer>
+</body>
+</html>
