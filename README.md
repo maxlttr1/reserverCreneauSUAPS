@@ -1,4 +1,4 @@
-### Bonjour !
+## Bonjour !
 Le SUAPS (service sports de Nantes Université) propose des créneaux horaires pour faire du sport, cependant ces créneaux sont très vite remplis.
 J'ai donc fait un petit programme qui permet de réserver des créneaux sans s'embêter à se connecter à son compte, etc.
 
@@ -6,10 +6,11 @@ Tout se fait avec des requêtes GET/POST. J'ai utilisé [Burp Suite](https://por
 
 Tout ce dont vous aurez besoin, c'est de votre username et password, et je suppose qu'il faut que vous ayez adhéré au SUAPS.
 
-**Fonctionnement**
+
+### Fonctionnement
 On fait tourner le programme une première fois pour récupérer les IDs des créneaux qu'on veut réserver de manière automatique. Ensuite, on les place dans config.json et on laisse le programme faire !
 
-**Ce que vous devez faire :**
+### Ce que vous devez faire
 - Cloner le dépot :
     ```bash
     git clone https://github.com/flash2974/reserverCreneauSUAPS && cd reserverCreneauSUAPS/
