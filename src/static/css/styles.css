@@ -37,12 +37,19 @@ form {
     margin-bottom: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
+
+    border-radius: 8px;  /* Adds rounded corners to the table */
+    overflow: hidden;  /* Prevents the borders from being cut off */
 }
 
 th, td {
@@ -64,11 +71,16 @@ tr:nth-child(even) td {
 }
 
 tr:hover td {
-    background-color: #eed366;
+    background-color: #ffea98;
 }
 
 /* Form Input fields */
-input[type="time"],
+input[type="time"] {
+    display: block;
+    width: 100%;
+    font-size: 1rem;
+}
+
 input[type="checkbox"] {
     margin: 10px 0;
     padding: 8px;
