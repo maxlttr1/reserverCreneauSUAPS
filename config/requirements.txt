@@ -4,3 +4,4 @@ pandas
 python-dotenv
 schedule
 datetime
+Flask
