@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Flask Web UI</title>
+    <title>reserverCreneauSUAPS</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
     <header>
+        <h1>reserverCreneauSUAPS</h1>
     </header>
     <main>
         <section>
@@ -15,34 +16,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Jour</th>
-                            <th>Heure de réservation</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for day, times in config_file['jours'].items() %}
-                            <tr>
-                                <td>{{ day | capitalize }}</td>
-                                <td>
-                                        {% if times %}
-                                        <input type="time" name="{{ day }}" value="{{ times | join(', ') }}" />
-                                    {% else %}
-                                        <input type="time" name="{{ day }}" placeholder="Aucune heure de réservation" />
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                <button type="submit">Sauvegarder</button>
-            </form>
-        </section>
-        <section>
-            <form action="/update" method="POST">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Sélectionner</th>
+                            <th>Sélectionner<br>(3 max / act)</th>
                             <th>Activité</th>
                             <th>Jour</th>
                             <th>Horaire</th>
@@ -68,10 +42,14 @@
                 <button type="submit">Sauvegarder</button>
             </form>
         </section>
-    </main>
-    
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash">
+                    {{ messages[0][1] }}
+                </div>
+            {% endif %}
+        {% endwith %}
     <footer>
-
     </footer>
 </body>
 </html>

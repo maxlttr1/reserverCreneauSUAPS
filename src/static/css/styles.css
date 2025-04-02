@@ -54,7 +54,7 @@ table {
 
 th, td {
     padding: 12px;
-    text-align: left;
+    text-align: center;
 }
 
 th {
@@ -74,24 +74,13 @@ tr:hover td {
     background-color: #ffea98;
 }
 
-/* Form Input fields */
-input[type="time"] {
-    display: block;
-    width: 100%;
-    font-size: 1rem;
-}
-
 input[type="checkbox"] {
     margin: 10px 0;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    width: 100%;
-    font-size: 1rem;
-}
-
-input[type="checkbox"] {
     width: auto;
+    font-size: 1rem;
 }
 
 button {
@@ -120,6 +109,13 @@ thead th {
 
 tbody td {
     font-size: 1rem;
+}
+
+.flash {
+    background-color: rgb(185, 255, 175);
+    color: rgb(63, 63, 63);
+    font-size: 1.5rem;
+    text-align: center;
 }
 
 /* Footer */
