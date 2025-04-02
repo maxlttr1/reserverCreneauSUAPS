@@ -39,6 +39,30 @@
         <section>
             <form action="/update" method="POST">
                 <table>
+                    <thead>
+                        <tr>
+                            <th>Activity Name</th>
+                            <th>Activity ID</th>
+                            <th>Day</th>
+                            <th>Time Slot</th>
+                            <th>Location</th>
+                            <th>Remaining Places</th>
+                            <th>Activity ID (Details)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for activity in activities_dict %}
+                        <tr>
+                            <td>{{activity['activity_name']}}</td>
+                            <td>{{activity['activity_id']}}</td>
+                            <td>{{activity['jour']}}</td>
+                            <td>{{activity['creneau_horaire']}}</td>
+                            <td>{{activity['lieu']}}</td>
+                            <td>{{activity['places_restantes']}}</td>
+                            <td>{{activity['id']}}</td>
+                        {% endfor %}
+                        </tr>
+                    </tbody>
                 </table>
             </form>
         </section>
