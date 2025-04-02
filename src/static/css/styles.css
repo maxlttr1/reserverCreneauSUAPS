@@ -64,7 +64,7 @@ tr:nth-child(even) td {
 }
 
 tr:hover td {
-    background-color: #f1c40f;
+    background-color: #eed366;
 }
 
 /* Form Input fields */
