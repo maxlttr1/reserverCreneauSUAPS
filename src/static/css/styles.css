@@ -13,6 +13,28 @@ body {
     padding: 20px;
 }
 
+#body_login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100vh; 
+}
+
+#login {
+    margin-top: 20px;
+    width: 50%;
+    padding: 10px;
+}
+
+#login button {
+    margin: 20px;
+}
+
+#login  label {
+    font-weight: bold;
+}
+
 /* Header */
 header {
     text-align: center;
@@ -20,6 +42,12 @@ header {
 }
 
 header h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+}
+
+h2 {
+    text-align: center;
     font-size: 2.5rem;
     color: #2c3e50;
 }

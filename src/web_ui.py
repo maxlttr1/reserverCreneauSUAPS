@@ -1,5 +1,6 @@
 import json
 from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 from AutoSUAPS import *
 from dotenv import load_dotenv
@@ -16,6 +17,9 @@ PASSWORD = getenv("PASSWORD")
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"  # Redirect if not logged in
 
 activities_cache = None
 activities_cache_timestamp = 0
@@ -43,13 +47,44 @@ def get_activities():
 
     return activities_cache
 
+class User(UserMixin):
+    def __init__(self, username):
+        self.username = username
+
+    def get_id(self):
+        return self.username
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User(user_id)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        password = request.form['password']
+
+        if "passwd" == password:
+            user = User("admin")
+            login_user(user)
+            return redirect(url_for('home'))
+
+        flash('Invalid username or password!', 'danger')
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
 @app.route('/')
+@login_required
 def home():
     activities_dict = get_activities()
 
     return render_template('index.html', activities_dict = activities_dict)
 
 @app.route('/update', methods=['POST'])
+@login_required
 def update():
     selected_ids = request.form.getlist('id_resa')
 
