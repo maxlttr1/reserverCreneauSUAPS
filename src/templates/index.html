@@ -28,7 +28,7 @@
                     <tbody>
                         {% for activity in activities_dict %}
                         <tr>
-                            <td><input type="checkbox" name="id_resa" value="{{activity['id']}}"></td>
+                            <td id="checkbox"><input type="checkbox" name="id_resa" value="{{activity['id']}}"></td>
                             <td>{{activity['activity_name']}}</td>
                             <td>{{activity['jour']}}</td>
                             <td>{{activity['creneau_horaire']}}</td>

@@ -82,6 +82,10 @@ table {
 
 th, td {
     padding: 12px;
+    text-align: left;
+}
+
+#checkbox {
     text-align: center;
 }
 
