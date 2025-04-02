@@ -1,7 +1,19 @@
 import json
 from flask import Flask, render_template, request, redirect, url_for
 
-#Créer une instance
+from Fonctions import *
+from dotenv import load_dotenv
+from os import getenv
+import time
+import schedule
+import os
+
+BASE_DIR = os.path.dirname(__file__)
+
+load_dotenv(dotenv_path=os.path.join(BASE_DIR, '../config/.env'), override=True)
+USERNAME = getenv("USERNAME")
+PASSWORD = getenv("PASSWORD")
+
 app = Flask(__name__)
 
 def read_config():
@@ -14,30 +26,34 @@ def save_config(config):
 
 from flask import Flask, render_template
 
-#Route vers la home page
 @app.route('/')
 def home():
+    auto = AutoSUAPS(USERNAME, PASSWORD)
+    auto.login()
+
     config_file = read_config()
 
-    config = {
-        "ids_resa": [
-            "a67c920a-fc66-452c-8d07-5d7206a44f5b", 
-            "c12b09b0-8660-4b3c-9711-983317af0441", 
-            "eba1eb76-55b8-4ae4-a067-6182f3e6707b"
-        ],
-        "jours": {
-            "lundi": [],
-            "mardi": ["20:01"],
-            "mercredi": [],
-            "jeudi": ["19:31"],
-            "vendredi": [],
-            "samedi": [],
-            "dimanche": []
-        }
-    }
-    app.logger.info(config_file)
+    df = auto.getActivitiesInfo()
+    activities_dict = df.to_dict(orient='records')
+    print(activities_dict)
 
-    return render_template('index.html', config_file=config_file)
+    auto.logout()
+    return render_template('index.html', config_file=config_file, activities_dict = activities_dict)
+
+@app.route('/update', methods=['POST'])
+def update():
+    config_file = read_config()
+
+    for day in config_file["jours"]:
+        new_times = request.form.get(day)
+        if new_times:
+            config_file["jours"][day] = [time.strip() for time in new_times.split(',')]
+        else:
+            config_file["jours"][day] = []
+
+    save_config(config_file)
+
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     app.run(debug=True)

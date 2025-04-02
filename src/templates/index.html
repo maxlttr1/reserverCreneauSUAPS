@@ -7,36 +7,41 @@
 </head>
 <body>
     <header>
-        <h1>Web ui pour configurer ses choix</h1>
     </header>
     <main>
-        <form method="POST">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Jours</th>
-                        <th>Heure de réservation</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for day, time in config_file.jours.items() %}
+        <section>
+            <form action="/update" method="POST">
+                <table>
+                    <thead>
                         <tr>
-                            <td>{{ day | capitalize }}</td>
-                            <td>
-                                {% if time %}
-                                    <p>{{ time | join(', ') }}</p> <!--  to remove  [''] from the number format -->
-                                {% else %}
-                                    Pas d'heure de réservation
-                                {% endif %}
-                            </td>
+                            <th>Jour</th>
+                            <th>Heure de réservation</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            
-            <br>
-            <button type="submit">Submit</button>
-        </form>
+                    </thead>
+                    <tbody>
+                        {% for day, times in config_file.jours.items() %}
+                            <tr>
+                                <td>{{ day | capitalize }}</td>
+                                <td>
+                                        {% if times %}
+                                        <input type="time" name="{{ day }}" value="{{ times | join(', ') }}" />
+                                    {% else %}
+                                        <input type="time" name="{{ day }}" placeholder="Aucune heure de réservation" />
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button type="submit">Sauvegarder</button>
+            </form>
+        </section>
+        <section>
+            <form action="/update" method="POST">
+                <table>
+                </table>
+            </form>
+        </section>
     </main>
     
     <footer>
