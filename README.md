@@ -6,9 +6,8 @@ Tout se fait avec des requêtes GET/POST. J'ai utilisé [Burp Suite](https://por
 
 Tout ce dont vous aurez besoin, c'est de votre username et password, et je suppose qu'il faut que vous ayez adhéré au SUAPS.
 
-**Deux manières de fonctionner :**
-- "Basique" : le programme renvoie un tableau avec tous les IDs des activités, vous choisissez celles que vous voulez
-- Ou vous rentrez des IDs dans une liste python et c'est très facilement automatisable. Dans ce cas, utilisez le module `schedule`, pour régler le jour et l'heure de vos réservations.
+**Fonctionnement**
+On fait tourner le programme une première fois pour récupérer les IDs des créneaux qu'on veut réserver de manière automatique. Ensuite, on les place dans config.json et on laisse le programme faire !
 
 **Ce que vous devez faire :**
 - Cloner le dépot :
@@ -33,7 +32,7 @@ docker compose up -d && \
 sleep 10 && \
 docker logs reservercreneausuaps-app-1
 ```
-- Il vous suffira de reporter les **ID** qui vous intéressent des activités dans le `config.json` et de changer les horaires d'inscriptions.
+- Il vous suffira de reporter les **ID** qui vous intéressent des activités dans le `config.json`. Les horaires d'activation du bot sont automatiquement définies.
 - Pour mettre à jour le container:
 
     ```bash

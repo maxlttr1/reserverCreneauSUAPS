@@ -141,7 +141,7 @@ class AutoSUAPS :
         return df
     
     
-    def getSchedules(self, liste_input: list[str] = readJSON()) :
+    def getSchedules(self, delta = 2, liste_input: list[str] = readJSON()) :
         df = self.getActivitiesInfo()
         filtered_rows = df[df['id'].isin(liste_input)]
 
@@ -152,9 +152,8 @@ class AutoSUAPS :
             
             end_time = datetime.datetime.strptime(row['creneau_horaire'].split(' - ')[1], "%H:%M")
 
-            # Ajouter 3 minutes
-            end_time_plus_1 = end_time + datetime.timedelta(minutes=1)
-            hour = end_time_plus_1.strftime("%H:%M")
+            end_time_plus_delta = end_time + datetime.timedelta(minutes=delta)
+            hour = end_time_plus_delta.strftime("%H:%M")
             
             res.append({'id': id, "day" : day, "hour" : hour})
         
