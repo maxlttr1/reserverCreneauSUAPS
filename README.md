@@ -25,9 +25,7 @@ On fait tourner le programme une première fois pour récupérer les IDs des cr�
     echo -e "USERNAME=username\nPASSWORD=mdp" > config/.env
     ```
 
-<br>
-
-Si vous utilisez Docker :
+#### Avec Docker :
 ```bash
 docker compose up -d && \
 sleep 10 && \
@@ -43,16 +41,6 @@ docker logs reservercreneausuaps-app-1
     ```
 
 <br>
-
-Sinon :
-1. Installez tous les modules nécessaires avec :
-    ```bash
-    pip install -r requirements.txt
-    # ou
-    python.exe -m pip install -r requirements.txt
-    ```
-
-2. Lancez `main.py`
 
 ### TODO :
 - fix `setIdPeriode()` dans `Fonctions.py` qui fixe le mauvais ID de période une semaine avant la période "spéciale" (Noël)
