@@ -63,7 +63,7 @@ def login():
     if request.method == 'POST':
         password = request.form['password']
 
-        if "passwd" == password:
+        if password == PASSWORD:
             user = User("admin")
             login_user(user)
             return redirect(url_for('home'))
@@ -94,7 +94,6 @@ def update():
     
     flash('Modifications enregistrées !')
     
-
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
