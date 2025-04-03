@@ -27,15 +27,14 @@ On fait tourner le programme une première fois pour récupérer les IDs des cr�
 
 #### Avec Docker :
 ```bash
-docker compose up -d && \
-sleep 10 && \
-docker logs reservercreneausuaps-app-1
+docker compose up -d
 ```
-- Il vous suffira de reporter les **ID** qui vous intéressent des activités dans le `config.json`. Les horaires d'activation du bot sont automatiquement définies.
+- Visiter `http://localhost:5000`: il vous suffira de cocher les **activités** qui vous intéressent et de sauvegarder. Les horaires d'activation du bot sont automatiquement définies.
 - Pour mettre à jour le container:
 
     ```bash
     docker compose down && \
+    docker rmi reservercreneausuaps-app && \
     git pull && \
     docker compose up -d --build
     ```
@@ -44,6 +43,7 @@ docker logs reservercreneausuaps-app-1
 
 ### TODO :
 - fix `setIdPeriode()` dans `Fonctions.py` qui fixe le mauvais ID de période une semaine avant la période "spéciale" (Noël)
+- limiter le nombre d'activités sélectionnables dans la web_ui
 
 <br>
 <br>
