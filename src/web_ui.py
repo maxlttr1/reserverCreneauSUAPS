@@ -62,10 +62,11 @@ def load_user(user_id):
 def login():
     if request.method == 'POST':
         password = request.form['password']
+        want_remember = 'remember' in request.form
 
         if password == PASSWORD:
             user = User("admin")
-            login_user(user)
+            login_user(user, remember=want_remember)
             return redirect(url_for('home'))
 
     return render_template('login.html')
@@ -79,8 +80,9 @@ def logout():
 @login_required
 def home():
     activities_dict = get_activities()
+    config_file = read_config()
 
-    return render_template('index.html', activities_dict = activities_dict)
+    return render_template('index.html', activities_dict = activities_dict, config_file = config_file)
 
 @app.route('/update', methods=['POST'])
 @login_required
