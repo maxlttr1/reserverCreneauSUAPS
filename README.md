@@ -29,7 +29,7 @@ On fait tourner le programme une première fois pour récupérer les IDs des cr�
 ```bash
 docker compose up -d
 ```
-- Visiter `http://localhost:5000`: il vous suffira de cocher les **activités** qui vous intéressent et de sauvegarder. Les horaires d'activation du bot sont automatiquement définies.
+- Visiter [http://localhost:5000](http://localhost:5000): il vous suffira de cocher les **activités** qui vous intéressent et de sauvegarder. Les horaires d'activation du bot sont automatiquement définies.
 - Pour mettre à jour le container:
 
     ```bash
