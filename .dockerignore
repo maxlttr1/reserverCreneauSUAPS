@@ -8,3 +8,5 @@ config/.example.config.json
 config/.example.env
 README.md
 venv
+src/__pycache__
+__pycache__

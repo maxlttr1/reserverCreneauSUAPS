@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>reserverCreneauSUAPS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>reserverCreneauSUAPS</h1>
+    </header>
+    <main>
+        <section>
+            <form action="/update" method="POST">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sélectionner<br>(3 max / act)</th>
+                            <th>Activité</th>
+                            <th>Jour</th>
+                            <th>Horaire</th>
+                            <th>Adresse</th>
+                            <th>Places restantes</th>
+                            <th>Activité ID (Détails)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for activity in activities_dict %}
+                        <tr>
+                            <td id="checkbox">
+                                <input type="checkbox" name="id_resa" value="{{activity['id']}}"
+                                {% if activity['id'] in config_file['ids_resa'] %} checked {% endif %}>
+                            </td>
+                            <td>{{activity['activity_name']}}</td>
+                            <td>{{activity['jour']}}</td>
+                            <td>{{activity['creneau_horaire']}}</td>
+                            <td>{{activity['lieu']}}</td>
+                            <td>{{activity['places_restantes']}}</td>
+                            <td>{{activity['id']}}</td>
+                        {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="submit">Sauvegarder</button>
+            </form>
+        </section>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash">
+                    {{ messages[0][1] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+    <footer>
+    </footer>
+</body>
+</html>
