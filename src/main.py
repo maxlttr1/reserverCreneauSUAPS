@@ -35,7 +35,7 @@ if __name__ == '__main__' :
         
         if counter % 10 == 0 :
             next_run = schedule.next_run()
-            if next_run != old_run :
+            if next_run and next_run != old_run :
                 print(f"Prochaine exécution : {next_run.astimezone(pytz.timezone('Europe/Paris')).strftime('%d-%m-%Y %H:%M:%S')}")
                 old_run = next_run
                 
