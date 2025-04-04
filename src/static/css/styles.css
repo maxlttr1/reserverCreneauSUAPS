@@ -5,21 +5,28 @@
     box-sizing: border-box;
 }
 
-body {
+#moving_bg {
     font-family: 'Arial', sans-serif;
-    line-height: 1.6;
-    background-color: #f4f7fc;
-    color: #333;
-    padding: 20px;
+    position: fixed;
+    top:0;
+    left: 0;
 }
 
 #body_login {
+    position: absolute;
+    top: 50%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+    
+    padding: 12px;
+    background-color: rgba(255, 255, 255, 0.75); /* Fond semi-transparent */
+    border-radius: 5px;
+    
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
-    height: 100vh; 
+    align-items: center;
 }
+
 
 #body_login section {
     display: flex;
