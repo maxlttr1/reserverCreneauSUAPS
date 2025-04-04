@@ -25,7 +25,7 @@ On fait tourner le programme une première fois pour récupérer les IDs des cr�
     echo -e "USERNAME=username\nPASSWORD=mdp" > config/.env
     ```
 
-#### Avec Docker :
+#### Avec Docker (`http`):
 ```bash
 docker compose up -d
 ```
@@ -47,6 +47,19 @@ Il vous suffira de cocher les **activités** qui vous intéressent et de sauvega
     git pull && \
     docker compose up -d --build
     ```
+
+#### Avec Docker (`https`):
+```bash
+cp example.docker-compose-v2.yml docker-compose-v2.yml
+```
+```bash
+touch ~/docker/traefik/acme.json && chmod ~/docker/traefik/acme.json
+``` 
+- Dans `config/traefik.yml`, remplacer **EMAIL** avec votre **email**
+- Dans `docker-compose-v2.yml` remplacer **DOMAIN** avec votre nom de **domaine** / **sous domaine**
+```bash
+docker compose -p reservercreneausuaps --file docker-compose-v2 up -d
+```
 
 <br>
 

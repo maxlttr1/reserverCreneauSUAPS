@@ -1,0 +1,29 @@
+services:
+  app:
+    build:
+      context: .
+    volumes:
+      - ./config/config.json:/app/config/config.json
+      - ./config/.env:/app/config/.env
+    ports:
+      - 5000:5000
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.https.tls=true
+      - traefik.http.routers.https.tls.certresolver=myresolver
+      - traefik.http.routers.https.entrypoints=websecure
+      - traefik.http.routers.https.rule=Host(`DOMAIN`)
+    restart: unless-stopped
+  traefik:
+    image: traefik:latest
+    networks:
+      - proxy
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config/traefik-config.yml:/etc/traefik/traefik.yml
+      - ~/docker/traefik/:/var/traefik/certs/:rw
+    restart: unless-stopped

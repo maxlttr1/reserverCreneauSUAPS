@@ -3,3 +3,4 @@ config/.env
 config/config.json
 __pycache__
 scr/__pycache__
+docker-compose-v2.yml
