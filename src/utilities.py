@@ -1,3 +1,4 @@
+# Pas d'import de AutoSUAPS pour éviter un import circulaire
 import schedule
 import datetime
 import pytz

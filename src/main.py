@@ -1,16 +1,15 @@
 from AutoSUAPS import AutoSUAPS
-from utilities import setAllSchedules, getParisDatetime, actions
+from utilities import setAllSchedules, getParisDatetime
 from dotenv import load_dotenv
-from os import getenv
-import os
+from os import getenv, path
 import datetime
 import schedule
 import time
 import pytz
 
-BASE_DIR = os.path.dirname(__file__)
+BASE_DIR = path.dirname(__file__)
 
-load_dotenv(dotenv_path=os.path.join(BASE_DIR, '../config/.env'), override=True)
+load_dotenv(dotenv_path=path.join(BASE_DIR, '../config/.env'), override=True)
 USERNAME = getenv("USERNAME")
 PASSWORD = getenv("PASSWORD")
 
@@ -25,7 +24,7 @@ if __name__ == '__main__' :
     setAllSchedules(auto)
     
     # Pour que les schedule commencent à 0 secondes pile !
-    counter = 0
+    counter = 0 # Compteur de minutes
     old_run = datetime.datetime(1970, 1, 1)
     while getParisDatetime().second != 0 :
         time.sleep(1)
