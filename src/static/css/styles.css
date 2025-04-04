@@ -19,12 +19,13 @@
     transform: translate(-50%, -50%);
     
     padding: 12px;
-    background-color: rgba(255, 255, 255, 0.75); /* Fond semi-transparent */
+    background-color: rgba(255, 255, 255, 0.75);
     border-radius: 5px;
     
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
 }
 
 
