@@ -24,10 +24,6 @@ if __name__ == '__main__' :
 
     setAllSchedules(auto)
     
-    # Fix en dur à cause des vacances
-    schedule.every().tuesday.at("20:03", "Europe/Paris").do(actions, auto)
-    schedule.every().thursday.at("19:33", "Europe/Paris").do(actions, auto)
-    
     # Pour que les schedule commencent à 0 secondes pile !
     counter = 0
     old_run = datetime.datetime(1970, 1, 1)
