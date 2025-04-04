@@ -41,6 +41,13 @@ docker compose up -d
 
 <br>
 
+Ensuite, vous aurez accès à la *WebUI*. Dans un navigateur, allez à l'adresse de votre serveur (IP ou nom de domaine) et mettez vous sur le port 5000. Il faut au préalabale que le port soit ouvert.
+Par exemple : 
+`https://IP_de_mon_serveur:5000`
+
+Connectez-vous sur la WebUI à l'aide de votre mot de passe universitaire (celui enregistré dans le .env)
+Sélectionnez les créneaux que vous voulez réserver automatiquement et cliquez sur le bouton **Sauvegarder**
+
 ### TODO :
 - fix `setIdPeriode()` dans `Fonctions.py` qui fixe le mauvais ID de période une semaine avant la période "spéciale" (Noël)
 - limiter le nombre d'activités sélectionnables dans la web_ui
