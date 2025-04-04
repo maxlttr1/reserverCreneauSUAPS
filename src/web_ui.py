@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 from AutoSUAPS import *
+from utilities import setAllSchedules
 from dotenv import load_dotenv
 from os import getenv
 import time
@@ -87,15 +88,21 @@ def home():
 @app.route('/update', methods=['POST'])
 @login_required
 def update():
+    auto = AutoSUAPS(USERNAME, PASSWORD)
+    auto.login()
+    
     selected_ids = request.form.getlist('id_resa')
 
     if selected_ids:
         save_config({"ids_resa": list(selected_ids)})
     else:
         save_config({"ids_resa": []})
+
+    setAllSchedules(auto)
     
     flash('Modifications enregistrées !')
-    
+    auto.logout()
+
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
