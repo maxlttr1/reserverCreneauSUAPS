@@ -2,6 +2,7 @@
 .gitignore
 Dockerfile
 docker-compose.yml
+docker-compose-v2.yml
 config/config.json
 config/.env
 config/.example.config.json
