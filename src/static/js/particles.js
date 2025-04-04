@@ -18,7 +18,8 @@ const opt = {
 }
 const Particles = []
 let time = 0
-document.body.addEventListener('click', () => {
+
+listener = () => {
   opt.h1 = rand(0, 360)
   opt.h2 = rand(0, 360)
   opt.s1 = rand(20, 90)
@@ -30,7 +31,10 @@ document.body.addEventListener('click', () => {
   for (let p of Particles) {
     p.randomize()
   }
-})
+}
+
+document.body.addEventListener('keypress', listener);
+document.body.addEventListener('click', listener);
 
 
 /*--------------------
