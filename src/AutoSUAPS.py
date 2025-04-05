@@ -106,7 +106,7 @@ class AutoSUAPS :
             
         return activities
     
-    def getActivitiesInfo(self) -> pd.DataFrame | None :
+    def getActivitiesInfo(self) -> pd.DataFrame :
         '''
         Renvoie un dataframe avec toutes les infos sur les créneaux disponibles
         '''
@@ -134,21 +134,19 @@ class AutoSUAPS :
                     })
             
         df = pd.DataFrame(activities_list)
-        if df.empty:
-            return None
-
-        else :
+        if not df.empty:
             df['jour'] = pd.Categorical(df['jour'], categories=ordered_days, ordered=True)
             df = df.sort_values(['jour', 'creneau_horaire'])
             df.reset_index(inplace=True, drop=True)
-            return df
+            
+        return df
         
     
     def getSchedules(self, delta : int = 2, liste_input: list[str] = readJSON()) -> list[dict]:
         '''
         Pour chaque activité de liste_input, récupère l'heure de fin du créneau et ajoute 2 minutes (delta) pour savoir à quelles heures set les schedules
         '''
-        if (df := self.getActivitiesInfo()) is None :
+        if (df := self.getActivitiesInfo()).empty :
             return None
         
         filtered_rows = df[df['id'].isin(liste_input)]
@@ -171,7 +169,7 @@ class AutoSUAPS :
         '''
         Affiche le tableaux des activités disponibles, avec quelques informations
         '''
-        if(df := self.getActivitiesInfo()) is None :
+        if(df := self.getActivitiesInfo()).empty :
             print("Aucune activité disponible.")
         else :
             df = df.drop(["activity_id"], axis=1)
