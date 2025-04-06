@@ -7,7 +7,6 @@ from utilities import setAllSchedules
 from dotenv import load_dotenv
 from os import getenv
 import time
-import schedule
 import os
 
 BASE_DIR = os.path.dirname(__file__)
