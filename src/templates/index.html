@@ -51,8 +51,8 @@
                         </tr>
                     </tbody>
                 </table>
-                <button type="submit" value="sauvegarder">Sauvegarder</button>
-                <button type="submit" value="default">Default</button>
+                <button type="submit" name="action" value="sauvegarder">Sauvegarder</button>
+                <button type="submit" name="action" value="autre_action">Autre Action</button>
             </form>
         </section>
         {% with messages = get_flashed_messages(with_categories=true) %}
