@@ -87,22 +87,28 @@ def home():
 @app.route('/update', methods=['POST'])
 @login_required
 def update():
+    action = request.form.get('action')
     auto = AutoSUAPS(USERNAME, PASSWORD)
     auto.login()
-    
-    selected_ids = request.form.getlist('id_resa')
 
-    if selected_ids:
-        save_config({"ids_resa": list(selected_ids)})
-    else:
-        save_config({"ids_resa": []})
+    if action == 'sauvegarder':
 
-    setAllSchedules(auto)
-    
-    flash('Modifications enregistrées !')
-    auto.logout()
+        selected_ids = request.form.getlist('id_resa')
 
-    return redirect(url_for('home'))
+        if selected_ids:
+            save_config({"ids_resa": list(selected_ids)})
+        else:
+            save_config({"ids_resa": []})
+
+        setAllSchedules(auto)
+        flash('Modifications enregistrées !')
+        auto.logout()
+        return redirect(url_for('home'))
+
+    elif action == 'default':
+        setDefaultSchedules(auto)
+        flash('Default ok !')
+        return redirect(url_for('home'))
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
