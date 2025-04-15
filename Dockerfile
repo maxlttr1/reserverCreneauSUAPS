@@ -9,4 +9,4 @@ RUN pip install --no-cache-dir -r config/requirements.txt
 
 EXPOSE 5000
 
-CMD ["sh", "-c", "python -u src/main.py & python -u src/web_ui.py > /dev/null 2>&1"]
+CMD ["python", "-u", "unified_ui.py", "--ui"]
