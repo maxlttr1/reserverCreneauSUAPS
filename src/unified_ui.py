@@ -10,6 +10,9 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from dotenv import load_dotenv
 
+import logging
+logging.getLogger('werkzeug').setLevel(logging.CRITICAL) # pas de pollution (GET 304 machin)
+
 from AutoSUAPS import AutoSUAPS
 from utilities import setAllSchedules, setDefaultSchedules, getParisDatetime
 
