@@ -40,7 +40,7 @@ def setSchedule(day, hour, auto) :
 
 
 def setAllSchedules(auto):
-    for creneau in dico_activites:
+    for creneau in auto.getSchedules() :
         setSchedule(creneau['day'], creneau['hour'], auto)
 
 
