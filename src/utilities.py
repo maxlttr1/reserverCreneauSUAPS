@@ -40,11 +40,14 @@ def setSchedule(day, hour, auto) :
 
 
 def setAllSchedules(auto):
-    if(dico_activites := auto.getSchedules()) is None :
-        # Fix en dur à cause des vacances
-        schedule.every().tuesday.at("20:03", "Europe/Paris").do(actions, auto)
-        schedule.every().thursday.at("19:33", "Europe/Paris").do(actions, auto)
+    for creneau in dico_activites:
+        setSchedule(creneau['day'], creneau['hour'], auto)
+
+
+def setDefaultSchedules(auto) :
+    schedule.every().tuesday.at("20:03", "Europe/Paris").do(actions, auto)
+    schedule.every().thursday.at("19:33", "Europe/Paris").do(actions, auto)
+    schedule.every().wednesday.at("21:47", "Europe/Paris").do(actions, auto)
     
-    else : 
-        for creneau in dico_activites:
-            setSchedule(creneau['day'], creneau['hour'], auto)
+
+
