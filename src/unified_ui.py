@@ -1,101 +1,38 @@
-Vazy on va faire mieux encore, je te donne les fichiers en entier comme ca c cleann
-
-Main.py
-from AutoSUAPS import AutoSUAPS
-from utilities import setAllSchedules, getParisDatetime
-from dotenv import load_dotenv
-from os import getenv, path
-import datetime
-import schedule
 import time
+import threading
+import argparse
+import schedule
+import datetime
 import pytz
-
-BASE_DIR = path.dirname(__file__)
-
-load_dotenv(dotenv_path=path.join(BASE_DIR, '../config/.env'), override=True)
-USERNAME = getenv("USERNAME")
-PASSWORD = getenv("PASSWORD")
-
-
-if __name__ == '__main__' :
-    auto = AutoSUAPS(USERNAME, PASSWORD)
-
-    auto.login()
-    auto.printIDs()
-    auto.logout()
-
-    setAllSchedules(auto)
-
-    # Pour que les schedule commencent à 0 secondes pile !
-    counter = 0 # Compteur de minutes
-    old_run = datetime.datetime(1970, 1, 1)
-    while getParisDatetime().second != 0 :
-        time.sleep(1)
-
-    while True :
-        schedule.run_pending()
-
-        if counter % 10 == 0 :
-            next_run = schedule.next_run()
-            if next_run and next_run != old_run :
-                print(f"Prochaine exécution : {next_run.astimezone(pytz.timezone('Europe/Paris')).strftime('%d-%m-%Y %H:%M:%S')}")
-                old_run = next_run
-
-        time.sleep(60)
-        counter += 1
-
-
-
-Webui.py
 import json
+import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-
-from AutoSUAPS import *
-from utilities import setAllSchedules
 from dotenv import load_dotenv
-from os import getenv
-import time
-import os
 
+from AutoSUAPS import AutoSUAPS
+from utilities import setAllSchedules, setDefaultSchedules, getParisDatetime
+
+# === ENV SETUP ===
 BASE_DIR = os.path.dirname(__file__)
-
 load_dotenv(dotenv_path=os.path.join(BASE_DIR, '../config/.env'), override=True)
-USERNAME = getenv("USERNAME")
-PASSWORD = getenv("PASSWORD")
+USERNAME = os.getenv("USERNAME")
+PASSWORD = os.getenv("PASSWORD")
 
+# === FLASK APP SETUP ===
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "login"  # Redirect if not logged in
+login_manager.login_view = "login"
 
 activities_cache = None
 activities_cache_timestamp = 0
-CACHE_EXPIRATION_TIME = 600 # Time in seconds
+CACHE_EXPIRATION_TIME = 600  # seconds
 
-def read_config():
-    with open(os.path.join(BASE_DIR, '../config/config.json'), 'r') as config_file:
-        return json.load(config_file)
+auto = AutoSUAPS(USERNAME, PASSWORD)
 
-def save_config(config):
-    with open(os.path.join(BASE_DIR, '../config/config.json'), 'w') as config_file:
-        json.dump(config, config_file, indent=4)
-
-def get_activities():
-    global activities_cache, activities_cache_timestamp
-    current_time = time.time()
-
-    if activities_cache is None or (current_time - activities_cache_timestamp) > CACHE_EXPIRATION_TIME:
-        auto = AutoSUAPS(USERNAME, PASSWORD)
-        auto.login()
-        df = auto.getActivitiesInfo()
-        activities_cache = df.to_dict(orient='records')
-        activities_cache_timestamp = current_time
-        auto.logout()
-
-    return activities_cache
-
+# === FLASK AUTH ===
 class User(UserMixin):
     def __init__(self, username):
         self.username = username
@@ -112,12 +49,10 @@ def login():
     if request.method == 'POST':
         password = request.form['password']
         want_remember = 'remember' in request.form
-
         if password == PASSWORD:
             user = User("admin")
             login_user(user, remember=want_remember)
             return redirect(url_for('home'))
-
     return render_template('login.html')
 
 @app.route('/logout')
@@ -130,34 +65,82 @@ def logout():
 def home():
     activities_dict = get_activities()
     config_file = read_config()
-
-    return render_template('index.html', activities_dict = activities_dict, config_file = config_file)
+    return render_template('index.html', activities_dict=activities_dict, config_file=config_file)
 
 @app.route('/update', methods=['POST'])
 @login_required
 def update():
     action = request.form.get('action')
-    auto = AutoSUAPS(USERNAME, PASSWORD)
     auto.login()
 
     if action == 'sauvegarder':
-
         selected_ids = request.form.getlist('id_resa')
-
-        if selected_ids:
-            save_config({"ids_resa": list(selected_ids)})
-        else:
-            save_config({"ids_resa": []})
-
+        save_config({"ids_resa": list(selected_ids) if selected_ids else []})
         setAllSchedules(auto)
         flash('Modifications enregistrées !')
-        auto.logout()
-        return redirect(url_for('home'))
 
     elif action == 'default':
         setDefaultSchedules(auto)
         flash('Default ok !')
-        return redirect(url_for('home'))
+
+    auto.logout()
+    return redirect(url_for('home'))
+
+# === UTILS ===
+def read_config():
+    with open(os.path.join(BASE_DIR, '../config/config.json'), 'r') as f:
+        return json.load(f)
+
+def save_config(config):
+    with open(os.path.join(BASE_DIR, '../config/config.json'), 'w') as f:
+        json.dump(config, f, indent=4)
+
+def get_activities():
+    global activities_cache, activities_cache_timestamp
+    current_time = time.time()
+    if activities_cache is None or (current_time - activities_cache_timestamp) > CACHE_EXPIRATION_TIME:
+        auto.login()
+        df = auto.getActivitiesInfo()
+        activities_cache = df.to_dict(orient='records')
+        activities_cache_timestamp = current_time
+        auto.logout()
+    return activities_cache
+
+# === SCHEDULER ===
+def scheduler_loop():
+    counter = 0
+    old_run = datetime.datetime(1970, 1, 1)
+    while getParisDatetime().second != 0:
+        time.sleep(1)
+    while True:
+        schedule.run_pending()
+        if counter % 10 == 0:
+            next_run = schedule.next_run()
+            if next_run and next_run != old_run:
+                print(f"Prochaine exécution : {next_run.astimezone(pytz.timezone('Europe/Paris')).strftime('%d-%m-%Y %H:%M:%S')}")
+                old_run = next_run
+        time.sleep(60)
+        counter += 1
+
+# === MAIN ENTRY ===
+def main(use_ui):
+    auto.login()
+    auto.printIDs()
+    auto.logout()
+    setAllSchedules(auto)
+
+    threading.Thread(target=scheduler_loop, daemon=True).start()
+
+    if use_ui:
+        print("[INFO] Flask UI active sur http://localhost:5000")
+        app.run(host="0.0.0.0", port=5000)
+    else:
+        print("[INFO] Mode sans UI. Scheduler en cours...")
+        while True:
+            time.sleep(3600)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--ui', action='store_true', help='Activer le mode interface web')
+    args = parser.parse_args()
+    main(use_ui=args.ui)
