@@ -57,7 +57,7 @@ class AutoSUAPS :
                 return creneau
         return None
 
-    def setIDPeriode(self) -> str :
+    def setIDPeriode(self, weekDelta = True) -> str :
         '''
         Fait une requête pour savoir quel catalogue utiliser, selon la date actuelle. 
         Soit le catalogue régulier, soit les différents catalogues selon les dates de vacances.
@@ -73,9 +73,13 @@ class AutoSUAPS :
             for periode in rep.json() :
                 id = periode['id']
                 
+                startDate = datetime.strptime(periode['dateDebutActivites'], '%Y-%m-%d')
+                endDate = datetime.strptime(periode['dateFinActivites'], '%Y-%m-%d')
+                
                 # On enlève 1 semaine car on fait la réservation 1 semaine en avance
-                startDate = datetime.strptime(periode['dateDebutActivites'], '%Y-%m-%d') - timedelta(days=7)
-                endDate = datetime.strptime(periode['dateFinActivites'], '%Y-%m-%d') - timedelta(days=7)
+                if weekDelta :
+                    startDate -= timedelta(days=7)
+                    endDate -= timedelta(days=7)
                 
                 startDate = startDate.replace(tzinfo=todayDate.tzinfo)
                 endDate = endDate.replace(tzinfo=todayDate.tzinfo)

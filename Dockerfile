@@ -9,4 +9,4 @@ RUN pip install --no-cache-dir -r config/requirements.txt
 
 EXPOSE 5000
 
-CMD ["python", "-u", "src/main.py", "--ui"]
+CMD ["python", "-u", "src/main.py"]

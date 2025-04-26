@@ -5,13 +5,11 @@ import datetime
 import pytz
 import json
 import os
+import logging
+
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
 from dotenv import load_dotenv
-
-import logging
-logging.getLogger('werkzeug').setLevel(logging.CRITICAL) # pas de pollution (GET 304 machin)
-
 from AutoSUAPS import AutoSUAPS
 from utilities import setAllSchedules, setDefaultSchedules, getParisDatetime
 
@@ -67,7 +65,29 @@ def logout():
 def home():
     activities_dict = get_activities()
     config_file = read_config()
-    return render_template('index.html', activities_dict=activities_dict, config_file=config_file)
+    
+    sports = sorted(list({activity['activity_name'] for activity in activities_dict}))
+
+    return render_template('index.html', activities_dict=activities_dict, config_file=config_file, sports=sports)
+
+
+
+@app.route('/reserver', methods=['POST'])
+@login_required
+def reserver():
+    activity_id = request.form.get('id_resa')  # Récupère l'ID de l'activité sélectionnée
+    if not activity_id:
+        flash("Aucune activité sélectionnée pour la réservation.", "error")
+        return redirect('/')
+    
+    auto.login()
+    auto.setIDPeriode(False)
+    auto.reserverCreneau(activity_id)
+    auto.logout()
+    
+    print(f"Réservation effectuée pour l'activité ID : {activity_id}")
+    flash(f"Réservation effectuée pour l'activité ID : {activity_id}", "success")
+    return redirect('/')
 
 @app.route('/update', methods=['POST'])
 @login_required
@@ -84,6 +104,13 @@ def update():
     elif action == 'default':
         setDefaultSchedules(auto)
         flash('Default ok !')
+        
+    elif action.startswith("reserver_"):
+        activity_id = action.split("_")[1]
+        auto.login()
+        auto.setIDPeriode(False)
+        auto.reserverCreneau(activity_id)
+        flash(f"Réservation effectuée pour l'activité ID : {activity_id}", "success")
 
     auto.logout()
     return redirect(url_for('home'))
@@ -132,7 +159,7 @@ def scheduler_loop():
         counter += 1
 
 # === MAIN ENTRY ===
-def main():
+def main(DEBUG):
     auto.login()
     auto.printIDs()
     auto.logout()
@@ -141,7 +168,11 @@ def main():
     threading.Thread(target=scheduler_loop, daemon=True).start()
 
     print("[INFO] Flask UI active sur http://localhost:5000")
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=DEBUG)
 
 if __name__ == '__main__':
-    main()
+    DEBUG = False
+    if not DEBUG :
+        logging.getLogger('werkzeug').setLevel(logging.CRITICAL) # pas de pollution (GET 304 machin)
+        
+    main(DEBUG)

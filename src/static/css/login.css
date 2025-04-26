@@ -89,49 +89,6 @@ form {
     align-items: center;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-
-    border-radius: 8px;  /* Adds rounded corners to the table */
-    overflow: hidden;  /* Prevents the borders from being cut off */
-}
-
-th, td {
-    padding: 12px;
-    text-align: left;
-}
-
-#checkbox {
-    text-align: center;
-}
-
-th {
-    background-color: #34495e;
-    color: white;
-}
-
-td {
-    background-color: #ecf0f1;
-}
-
-tr:nth-child(even) td {
-    background-color: #f9f9f9;
-}
-
-tr:hover td {
-    background-color: #ffea98;
-}
-
-input[type="checkbox"] {
-    margin: 10px 0;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: auto;
-    font-size: 1rem;
-}
 
 button {
     background-color: #3398db;
