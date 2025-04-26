@@ -1,13 +1,12 @@
 import time
 import threading
-import argparse
 import schedule
 import datetime
 import pytz
 import json
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
 from dotenv import load_dotenv
 
 import logging
@@ -113,20 +112,27 @@ def get_activities():
 def scheduler_loop():
     counter = 0
     old_run = datetime.datetime(1970, 1, 1)
-    while getParisDatetime().second != 0:
+    
+    while getParisDatetime().second != 0 :
         time.sleep(1)
+            
     while True:
         schedule.run_pending()
+        
         if counter % 10 == 0:
-            next_run = schedule.next_run()
+            next_job = schedule.jobs[0]
+            next_run = next_job.next_run
+            
             if next_run and next_run != old_run:
-                print(f"Prochaine exécution : {next_run.astimezone(pytz.timezone('Europe/Paris')).strftime('%d-%m-%Y %H:%M:%S')}")
+                note = getattr(next_job, 'note', '???')
+                print(f"Prochaine exécution : {next_run.astimezone(pytz.timezone('Europe/Paris')).strftime('%d-%m-%Y %H:%M:%S')} ({note})")
                 old_run = next_run
+                
         time.sleep(60)
         counter += 1
 
 # === MAIN ENTRY ===
-def main(use_ui):
+def main():
     auto.login()
     auto.printIDs()
     auto.logout()
@@ -134,16 +140,8 @@ def main(use_ui):
 
     threading.Thread(target=scheduler_loop, daemon=True).start()
 
-    if use_ui:
-        print("[INFO] Flask UI active sur http://localhost:5000")
-        app.run(host="0.0.0.0", port=5000)
-    else:
-        print("[INFO] Mode sans UI. Scheduler en cours...")
-        while True:
-            time.sleep(3600)
+    print("[INFO] Flask UI active sur http://localhost:5000")
+    app.run(host="0.0.0.0", port=5000)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--ui', action='store_true', help='Activer le mode interface web')
-    args = parser.parse_args()
-    main(use_ui=args.ui)
+    main()

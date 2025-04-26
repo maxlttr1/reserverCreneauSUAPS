@@ -17,32 +17,40 @@ def getParisDatetime() :
 
 def actions(auto, id) :
     auto.login()
-    auto.reserverCreneau()
+    auto.reserverCreneau(id)
     auto.logout()
     
 
-def setSchedule(id, day, hour, auto) :
-    match day :
-        case "lundi" :
-            schedule.every().monday.at(hour, "Europe/Paris").do(actions, auto, id)
-        case "mardi" :
-            schedule.every().tuesday.at(hour, "Europe/Paris").do(actions, auto, id)
-        case "mercredi" :
-            schedule.every().wednesday.at(hour, "Europe/Paris").do(actions, auto, id)
-        case "jeudi" :
-            schedule.every().thursday.at(hour, "Europe/Paris").do(actions, auto, id)
-        case "vendredi" :
-            schedule.every().friday.at(hour, "Europe/Paris").do(actions, auto, id)
-        case "samedi" :
-            schedule.every().saturday.at(hour, "Europe/Paris").do(actions, auto, id)
-        case "dimanche" :
-            schedule.every().sunday.at(hour, "Europe/Paris").do(actions, auto, id)
+def setSchedule(id, day, hour, name, auto):
+    match day:
+        case "lundi":
+            job = schedule.every().monday.at(hour, "Europe/Paris").do(actions, auto, id)
+        case "mardi":
+            job = schedule.every().tuesday.at(hour, "Europe/Paris").do(actions, auto, id)
+        case "mercredi":
+            job = schedule.every().wednesday.at(hour, "Europe/Paris").do(actions, auto, id)
+        case "jeudi":
+            job = schedule.every().thursday.at(hour, "Europe/Paris").do(actions, auto, id)
+        case "vendredi":
+            job = schedule.every().friday.at(hour, "Europe/Paris").do(actions, auto, id)
+        case "samedi":
+            job = schedule.every().saturday.at(hour, "Europe/Paris").do(actions, auto, id)
+        case "dimanche":
+            job = schedule.every().sunday.at(hour, "Europe/Paris").do(actions, auto, id)
+    
+    job.note = name
 
 
 def setAllSchedules(auto):
     schedule.clear()
     for creneau in auto.getSchedules() :
-        setSchedule(creneau['id'], creneau['day'], creneau['hour'], auto)
+        setSchedule(
+            id = creneau['id'], 
+            day = creneau['day'], 
+            hour = creneau['hour'], 
+            name = creneau['name'],
+            auto = auto
+        )
 
 
 def setDefaultSchedules(auto) :

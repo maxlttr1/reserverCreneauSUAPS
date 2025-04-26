@@ -155,13 +155,14 @@ class AutoSUAPS :
         for _, row in filtered_rows.iterrows():
             id = row['id']
             day = row['jour'].lower()
+            name = row['activity_name']
             
             end_time = datetime.strptime(row['creneau_horaire'].split(' - ')[1], "%H:%M")
 
             end_time_plus_delta = end_time + timedelta(minutes=delta)
             hour = end_time_plus_delta.strftime("%H:%M")
             
-            res.append({'id': id, "day" : day, "hour" : hour})
+            res.append({"id": id, "day" : day, "hour" : hour, "name" : name})
         
         return res
         
