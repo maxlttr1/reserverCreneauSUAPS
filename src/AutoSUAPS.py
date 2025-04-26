@@ -176,27 +176,27 @@ class AutoSUAPS :
             print(df.to_string(index=False))
         
     
-    def reserverCreneau(self, liste_input: list[str] = readJSON()) -> None :
+    def reserverCreneau(self, id_creneau: str) -> None:
         '''
-        Réserve les créneaux spécifiés en arguments (liste d'ids)
+        Réserve le créneau spécifié par son id
         '''
         df = self.getActivitiesInfo()
-    
-        # Trouver les indices des créneaux directement avec pandas
-        liste_indexes = df[df['id'].isin(liste_input)].index.tolist()
-    
-        print(getParisDatetime().strftime("%d-%m-%Y %H:%M:%S"))
-    
-        for index_input in liste_indexes:
-            print('\t - ', end='')
-            try:
-                row = df.iloc[index_input]
-                activity_id = row['activity_id']
-                creneau_id = row['id']
-                places_restantes = row['places_restantes']
-            except :
-                print('Erreur d\'acces')
-    
+
+        print(getParisDatetime().strftime("%d-%m-%Y %H:%M:%S"), end=' --> ')
+
+        try:
+            row = df.loc[df['id'] == id_creneau].iloc[0]
+            activity_id = row['activity_id']
+            creneau_id = row['id']
+            places_restantes = row['places_restantes']
+            
+        except IndexError:
+            print("Aucun créneau trouvé avec cet id")
+            
+        except Exception as e:
+            print(f"Erreur d'accès: {e}")
+
+        else :
             if places_restantes > 0:
                 res = self.poster_requete(creneau_id, activity_id)
                 if res == 201:
@@ -205,7 +205,7 @@ class AutoSUAPS :
                     print(f"Erreur {res} d'inscription en {row['activity_name']}, le {row['jour']} pour le créneau de {row['creneau_horaire']}")
             else:
                 print(f"Pas de place en {row['activity_name']}, le {row['jour']} pour le créneau de {row['creneau_horaire']}")
-        print()
+            print()
 
 
     def poster_requete(self, id_creneau : str, id_activite : str) -> int :
