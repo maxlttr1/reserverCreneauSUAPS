@@ -62,9 +62,7 @@ sudo apt install caddy
 
 2. Création du fichier de configuration (Caddyfile) : Remplacer `mon-domaine.fr` par nom de domaine
 ```
-mon-domaine.fr { 
-    reverse_proxy localhost:5000
-}
+echo -e "mon-domaine.fr {\n\treverse_proxy localhost:5000\n}" > /etc/caddy/Caddyfile
 ```
 
 3. Démarrer Caddy
