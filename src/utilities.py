@@ -43,7 +43,10 @@ def setSchedule(id, day, hour, name, auto):
 
 def setAllSchedules(auto):
     schedule.clear()
-    for creneau in auto.getSchedules() :
+    
+    if(allSchedules := auto.getSchedules()) is None :
+        return
+    for creneau in allSchedules :
         setSchedule(
             id = creneau['id'], 
             day = creneau['day'], 
