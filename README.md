@@ -50,7 +50,7 @@ Il vous suffira de cocher les **activités** qui vous intéressent et de sauvega
     
 <br>
 
-Configuration HTTPS Avec Caddy
+## Configuration HTTPS Avec Caddy
 1. Installer Caddy :
 ```bash
 sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
