@@ -11,7 +11,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
 from dotenv import load_dotenv
 from AutoSUAPS import AutoSUAPS
-from utilities import setAllSchedules, setDefaultSchedules, getParisDatetime
+from utilities import setAllSchedules, setDefaultSchedules, get_paris_datetime
 
 # === ENV SETUP ===
 BASE_DIR = os.path.dirname(__file__)
@@ -90,8 +90,8 @@ def reserver():
         return redirect('/')
     
     auto.login()
-    auto.setIDPeriode(False)
-    auto.reserverCreneau(activity_id)
+    auto.set_periode(False)
+    auto.reserver_creneau(activity_id)
     auto.logout()
     
     print(f"Réservation effectuée pour l'activité ID : {activity_id}")
@@ -116,8 +116,8 @@ def update():
         
     elif action.startswith("reserver_"):
         activity_id = action.split("_")[1]
-        auto.setIDPeriode(False)
-        auto.reserverCreneau(activity_id)
+        auto.set_periode(False)
+        auto.reserver_creneau(activity_id)
         flash(f"Réservation effectuée !", "success")
 
     auto.logout()
@@ -137,7 +137,7 @@ def get_activities():
     current_time = time.time()
     if activities_cache is None or (current_time - activities_cache_timestamp) > CACHE_EXPIRATION_TIME:
         auto.login()
-        df = auto.getActivitiesInfo()
+        df = auto.get_info_activites()
         activities_cache = df.to_dict(orient='records')
         activities_cache_timestamp = current_time
         auto.logout()
@@ -148,7 +148,7 @@ def scheduler_loop():
     counter = 0
     old_run = datetime.datetime(1970, 1, 1)
     
-    while getParisDatetime().second != 0 :
+    while get_paris_datetime().second != 0 :
         time.sleep(1)
             
     while True:
@@ -169,7 +169,7 @@ def scheduler_loop():
 # === MAIN ENTRY ===
 def main(DEBUG):
     auto.login()
-    auto.printIDs()
+    auto.print_ids()
     auto.logout()
     setAllSchedules(auto)
 

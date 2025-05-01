@@ -49,7 +49,12 @@
                                     <div class="checkmark"></div>
                                 </label>
                             </td>
-                            <td>{{activity['activity_name']}}</td>
+                            <td>
+                                {{activity['activity_name']}}
+                                {% if activity['resa_a_venir'] %}
+                                    <span style="color: green; font-weight: bold;">(Inscrit)</span>
+                                {% endif %}
+                            </td>
                             <td>{{activity['jour']}}</td>
                             <td>{{activity['creneau_horaire']}}</td>
                             <td>{{activity['lieu']}}</td>

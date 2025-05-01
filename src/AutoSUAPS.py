@@ -1,6 +1,5 @@
 from utilities import *
 from datetime import datetime, timedelta
-# import datetime
 import requests
 import json
 from bs4 import BeautifulSoup
@@ -36,16 +35,16 @@ class AutoSUAPS :
 
         self.session.post(r.url, login_data)
         
-        self.setIDPeriode() 
+        self.set_periode() 
 
-    def getEtudiant(self) -> str :
+    def get_etudiant(self) -> str :
         '''
         Retourne la data JSON de l'étudiant en question (de toi qui lis ce code)
         '''
         return self.session.get('https://u-sport.univ-nantes.fr/api/individus/me').json()
         
     
-    def getCreneau(self, id_creneau : str, id_activite : str) -> str | None:
+    def get_creneau(self, id_creneau : str, id_activite : str) -> str | None:
         '''
         Retourne les data JSON d'un créneau à partir de son ID et de l'ID de l'activité
         '''
@@ -57,7 +56,7 @@ class AutoSUAPS :
                 return creneau
         return None
 
-    def setIDPeriode(self, weekDelta = True) -> str :
+    def set_periode(self, weekDelta = True) -> str :
         '''
         Fait une requête pour savoir quel catalogue utiliser, selon la date actuelle. 
         Soit le catalogue régulier, soit les différents catalogues selon les dates de vacances.
@@ -68,7 +67,7 @@ class AutoSUAPS :
             self.id_periode = rep.json()['id']
 
         else :
-            todayDate = getParisDatetime()
+            todayDate = get_paris_datetime()
             dates = {}
             for periode in rep.json() :
                 id = periode['id']
@@ -97,11 +96,11 @@ class AutoSUAPS :
             self.id_periode = closest_key
         
                     
-    def getActivities(self) -> list[str] :
+    def get_activites(self) -> list[str] :
         '''
         Renvoie une liste contenant les IDs des activités de l'user (3 max)
         '''
-        url_3sports = f'https://u-sport.univ-nantes.fr/api/extended/activites/individu/paiement?idIndividu={self.username}&typeIndividu={self.getEtudiant()["type"]}&idPeriode={self.id_periode}'
+        url_3sports = f'https://u-sport.univ-nantes.fr/api/extended/activites/individu/paiement?idIndividu={self.username}&typeIndividu={self.get_etudiant()["type"]}&idPeriode={self.id_periode}'
         rep = self.session.get(url_3sports).json()
         
         activities = []
@@ -110,13 +109,14 @@ class AutoSUAPS :
             
         return activities
     
-    def getActivitiesInfo(self) -> pd.DataFrame :
+    def get_info_activites(self) -> pd.DataFrame :
         '''
         Renvoie un dataframe avec toutes les infos sur les créneaux disponibles
         '''
         activities_list = []
         ordered_days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
-        for activity_id in self.getActivities():
+        liste_resa = self.get_creneaux_inscrit()
+        for activity_id in self.get_activites():
             URL = f'https://u-sport.univ-nantes.fr/api/extended/creneau-recurrents/semaine?idActivite={activity_id}&idPeriode={self.id_periode}&idIndividu={self.username}'
             rep = self.session.get(URL).json()
 
@@ -126,6 +126,7 @@ class AutoSUAPS :
                     jour = activity['jour'].capitalize()
                     creneau_horaire = activity['horaireDebut'] + ' - ' + activity['horaireFin']
                     lieu = activity['localisation']['nom']
+                    id = activity['id']
                     
                     activities_list.append({
                         'activity_name': activity_name,
@@ -134,7 +135,8 @@ class AutoSUAPS :
                         'creneau_horaire': creneau_horaire,
                         'lieu' : lieu,
                         'places_restantes' : activity['quota'] - activity['nbInscrits'],
-                        'id': activity['id']
+                        'id': id,
+                        'resa_a_venir' : id in liste_resa
                     })
             
         df = pd.DataFrame(activities_list)
@@ -146,11 +148,11 @@ class AutoSUAPS :
         return df
         
     
-    def getSchedules(self, delta : int = 2, liste_input: list[str] = readJSON()) -> list[dict]:
+    def get_schedules(self, delta : int = 2, liste_input: list[str] = readJSON()) -> list[dict]:
         '''
         Pour chaque activité de liste_input, récupère l'heure de fin du créneau et ajoute 2 minutes (delta) pour savoir à quelles heures set les schedules
         '''
-        if (df := self.getActivitiesInfo()).empty :
+        if (df := self.get_info_activites()).empty :
             return None
         
         filtered_rows = df[df['id'].isin(liste_input)]
@@ -169,25 +171,43 @@ class AutoSUAPS :
             res.append({"id": id, "day" : day, "hour" : hour, "name" : name})
         
         return res
+    
+    def get_creneaux_inscrit(self) -> list[str] :
+        '''
+        Renvoie les créneaux pour lesquels on est inscrit (créneaux à venir)
+        '''
+        rep = self.session.get('https://u-sport.univ-nantes.fr/api/extended/reservation-creneaux?idIndividu=E24A014X').json()
+        res = []
+        dateAuj = get_paris_datetime()
         
-    def printIDs(self) -> None :
+        for creneau in rep :
+            
+            dateDebut = datetime.strptime(creneau['occurenceCreneauDTO']['debut'], '%Y-%m-%dT%H:%M:%SZ')
+            dateDebut = dateDebut.replace(tzinfo=dateAuj.tzinfo)
+            
+            if creneau['actif'] and dateAuj < dateDebut :
+                res.append(creneau['creneau']['id'])
+                
+        return res
+        
+    def print_ids(self) -> None :
         '''
         Affiche le tableaux des activités disponibles, avec quelques informations
         '''
-        if(df := self.getActivitiesInfo()).empty :
+        if(df := self.get_info_activites()).empty :
             print("Aucune activité disponible.")
         else :
             df = df.drop(["activity_id"], axis=1)
             print(df.to_string(index=False))
         
     
-    def reserverCreneau(self, id_creneau: str) -> None:
+    def reserver_creneau(self, id_creneau: str) -> None:
         '''
         Réserve le créneau spécifié par son id
         '''
-        df = self.getActivitiesInfo()
+        df = self.get_info_activites()
 
-        print(getParisDatetime().strftime("%d-%m-%Y %H:%M:%S"), end=' --> ')
+        print(get_paris_datetime().strftime("%d-%m-%Y %H:%M:%S"), end=' --> ')
 
         try:
             row = df.loc[df['id'] == id_creneau].iloc[0]
@@ -222,13 +242,13 @@ class AutoSUAPS :
         post_data = {
             "utilisateur": {
                 "login": self.username,
-                "typeUtilisateur": self.getEtudiant()["type"]
+                "typeUtilisateur": self.get_etudiant()["type"]
             },
             'dateReservation': datetime.now().isoformat(timespec='milliseconds') + 'Z',
             'actif': False,
             'forcage': False,
-            'creneau': self.getCreneau(id_creneau,id_activite),
-            "individuDTO": self.getEtudiant()
+            'creneau': self.get_creneau(id_creneau,id_activite),
+            "individuDTO": self.get_etudiant()
         }
         
         post_data["creneau"]["fileAttente"] = True

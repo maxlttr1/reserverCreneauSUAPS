@@ -11,13 +11,13 @@ def readJSON() :
     with open(os.path.join(BASE_DIR, '../config/config.json'), 'r') as file :
         return list(json.load(file)["ids_resa"])
 
-def getParisDatetime() :
+def get_paris_datetime() :
     return datetime.datetime.now(pytz.timezone('Europe/Paris'))
 
 
 def actions(auto, id) :
     auto.login()
-    auto.reserverCreneau(id)
+    auto.reserver_creneau(id)
     auto.logout()
     
 
@@ -44,7 +44,7 @@ def setSchedule(id, day, hour, name, auto):
 def setAllSchedules(auto):
     schedule.clear()
     
-    if(allSchedules := auto.getSchedules()) is None :
+    if(allSchedules := auto.get_schedules()) is None :
         return
     for creneau in allSchedules :
         setSchedule(
