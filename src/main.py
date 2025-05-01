@@ -47,15 +47,22 @@ def load_user(user_id):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'GET' and request.args.get('token') == TOKEN:
+        user = User("admin")
+        login_user(user, remember=True)
+        return redirect(url_for('home'))
+    
     if request.method == 'POST':
         password = request.form['password']
         want_remember = 'remember' in request.form
         
-        if password == PASSWORD or request.args.get('token') == TOKEN:
+        if password == PASSWORD:
             user = User("admin")
             login_user(user, remember=want_remember)
             return redirect(url_for('home'))
+
     return render_template('login.html')
+
 
 @app.route('/logout')
 def logout():
