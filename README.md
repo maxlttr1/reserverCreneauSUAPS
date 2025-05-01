@@ -50,4 +50,29 @@ Il vous suffira de cocher les **activités** qui vous intéressent et de sauvega
     
 <br>
 
+Configuration HTTPS Avec Caddy
+1. Installer Caddy :
+```bash
+sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo tee /etc/apt/trusted.gpg.d/caddy.asc
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy.list
+sudo apt update
+sudo apt install caddy
+```
+
+2. Création du fichier de configuration (Caddyfile) : Remplacer `mon-domaine.fr` par nom de domaine
+```
+mon-domaine.fr { 
+    reverse_proxy localhost:5000
+}
+```
+
+3. Démarrer Caddy
+```bash
+sudo systemctl restart caddy
+```
+
+De cette manière, on accède au site directement via `https://mon-domaine.fr`.
+
+
 Merci à [maxlttr](https://github.com/maxlttr1) pour son aide !
