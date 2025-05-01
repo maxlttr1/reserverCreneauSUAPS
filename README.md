@@ -22,7 +22,7 @@ On fait tourner le programme une première fois pour récupérer les IDs des cr�
 
 - Ouvrir le fichier `.env` et remplir les champs **USERNAME** et **PASSWORD**
     ```bash
-    echo -e "USERNAME=username\nPASSWORD=mdp" > config/.env
+    echo -e "USERNAME=username\nPASSWORD=mdp\n" > config/.env
     ```
 
 #### Avec Docker:
@@ -73,6 +73,29 @@ sudo systemctl restart caddy
 ```
 
 De cette manière, on accède au site directement via `https://mon-domaine.fr`.
+Ensuite, on peut accéder à la page principale sans passer par la login page.
+Pour ce faire :
 
+1. Ajout du token au fichier `.env`
+```bash
+openssl rand -hex 32 >> config/.env
+```
+
+2. Copiez ce token !
+```bash
+cat config/.env
+```
+
+3. Relancez le container docker :
+```bash
+docker compose down && \
+docker rmi reservercreneausuaps_app && \
+docker compose up -d --build
+```
+
+4. Accédez directement au site via l'url suivante :
+```
+https://{nom_de_domaine}/login?token={token}
+```
 
 Merci à [maxlttr](https://github.com/maxlttr1) pour son aide !
