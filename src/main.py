@@ -86,7 +86,7 @@ def reserver():
     auto.logout()
     
     print(f"Réservation effectuée pour l'activité ID : {activity_id}")
-    flash(f"Réservation effectuée pour l'activité ID : {activity_id}", "success")
+    flash(f"Réservation effectuée !", "success")
     return redirect('/')
 
 @app.route('/update', methods=['POST'])
@@ -97,20 +97,19 @@ def update():
 
     if action == 'sauvegarder':
         selected_ids = request.form.getlist('id_resa')
-        save_config({"ids_resa": list(selected_ids) if selected_ids else []})
+        save_config({"ids_resa": selected_ids})
         setAllSchedules(auto)
-        flash('Modifications enregistrées !')
+        flash('Sauvegardé !')
 
     elif action == 'default':
         setDefaultSchedules(auto)
-        flash('Default ok !')
+        flash('Réservations par défaut ok !')
         
     elif action.startswith("reserver_"):
         activity_id = action.split("_")[1]
-        auto.login()
         auto.setIDPeriode(False)
         auto.reserverCreneau(activity_id)
-        flash(f"Réservation effectuée pour l'activité ID : {activity_id}", "success")
+        flash(f"Réservation effectuée !", "success")
 
     auto.logout()
     return redirect(url_for('home'))

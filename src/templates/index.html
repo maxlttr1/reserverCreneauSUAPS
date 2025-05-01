@@ -37,19 +37,15 @@
                             <th>Horaire</th>
                             <th>Adresse</th>
                             <th>Places restantes</th>
-                            <th>Activité ID (Détails)</th>
-                            <th>Réserver (immédiatement)</th>
+                            <th>Réserver<br>(immédiatement)</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for activity in activities_dict %}
                         <tr>
                             <td id="checkbox">
-                                
-
                                 <label class="check_container">
-                                    <input class="check_container" type="checkbox" name="id_resa" value="{{activity['id']}}"
-                                {% if activity['id'] in config_file['ids_resa'] %} checked {% endif %}>
+                                    <input class="check_container" type="checkbox" name="id_resa" sport={{activity['activity_name']}} value="{{activity['id']}}" {% if activity['id'] in config_file['ids_resa'] %} checked {% endif %}>
                                     <div class="checkmark"></div>
                                 </label>
                             </td>
@@ -58,7 +54,6 @@
                             <td>{{activity['creneau_horaire']}}</td>
                             <td>{{activity['lieu']}}</td>
                             <td>{{activity['places_restantes']}}</td>
-                            <td>{{activity['id']}}</td>
                             <td>
                                 <button class="resa_button" type="submit" name="action" value="reserver_{{ activity['id'] }}">Réserver</button>
                             </td>
@@ -95,6 +90,57 @@
                 });
             });
         });
+
+        const checkCreneau = {};
+
+        function incr(sportname) {
+            if (checkCreneau[sportname]) {
+                checkCreneau[sportname]++;
+            } else {
+                checkCreneau[sportname] = 1;
+            }
+        }
+
+        function sum_under_4() {
+            let sum = 0;
+            Object.values(checkCreneau).forEach(val => sum += val)
+            return sum <= 4;
+        }
+
+
+        
+        document.querySelectorAll('input.check_container').forEach(checkbox => {
+            const sportname = checkbox.getAttribute('sport');
+
+            if(checkbox.checked) {
+                incr(sportname);
+            }
+            checkbox.addEventListener('change', function() {
+                if(checkbox.checked) {
+                    incr(sportname);
+
+                    if(checkCreneau[sportname]>2) {
+                        checkbox.checked = false;
+                        alert(`Pas plus de 2 créneaux en ${sportname} !`);
+                        checkCreneau[sportname]--;
+                    }
+
+                    else if(!sum_under_4()) {
+                        checkbox.checked = false;
+                        alert(`Pas plus de 4 créneaux au total !`);
+                        checkCreneau[sportname]--;
+                    }
+                }
+                else {
+                    checkCreneau[sportname]--;
+                }
+
+                console.log(sportname);
+                console.log(checkCreneau);
+            });
+        });
+        
     </script>
+    
 </body>
 </html>
