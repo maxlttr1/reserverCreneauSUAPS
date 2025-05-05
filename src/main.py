@@ -33,7 +33,7 @@ activities_cache = None
 activities_cache_timestamp = 0
 CACHE_EXPIRATION_TIME = 600  # seconds
 
-auto = AutoSUAPS(USERNAME, PASSWORD)
+auto = AutoSUAPS(USERNAME, PASSWORD, NTFY_URL)
 
 # === FLASK AUTH ===
 class User(UserMixin):
@@ -124,7 +124,7 @@ def update():
         auto.set_periode(False)
         auto.reserver_creneau(activity_id)
         flash(f"Réservation effectuée !", "success")
-        requests.post(NTFY_URL, data="✅ Réservation effectuée !")
+        requests.post(NTFY_URL, data="✅ Réservation effectuée pour l'activité ID : {activity_id}")
 
     auto.logout()
     return redirect(url_for('home'))
