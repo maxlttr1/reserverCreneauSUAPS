@@ -22,7 +22,7 @@ On fait tourner le programme une première fois pour récupérer les IDs des cr�
 
 - Ouvrir le fichier `.env` et remplir les champs **USERNAME** et **PASSWORD**
     ```bash
-    echo -e "USERNAME=username\nPASSWORD=mdp\nNTFY_URL=https://ntfy.sh/... > config/.env
+    echo -e "USERNAME=username\nPASSWORD=mdp\nNTFY_URL=https://ntfy.sh/..." > config/.env
     ```
 
 #### Avec Docker:
