@@ -6,7 +6,6 @@ import pytz
 import json
 import os
 import logging
-import requests
 
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
@@ -98,7 +97,6 @@ def reserver():
     
     print(f"Réservation effectuée pour l'activité ID : {activity_id}")
     flash(f"Réservation effectuée !", "success")
-    requests.post(NTFY_URL, data="✅ Réservation effectuée pour l'activité ID : {activity_id}")
     return redirect('/')
 
 @app.route('/update', methods=['POST'])
@@ -112,19 +110,16 @@ def update():
         save_config({"ids_resa": selected_ids})
         setAllSchedules(auto)
         flash('Sauvegardé !')
-        requests.post(NTFY_URL, data="✅ Sauvegardé !")
 
     elif action == 'default':
         setDefaultSchedules(auto)
         flash('Réservations par défaut ok !')
-        requests.post(NTFY_URL, data="✅ Réservations par défaut ok !")
         
     elif action.startswith("reserver_"):
         activity_id = action.split("_")[1]
         auto.set_periode(False)
         auto.reserver_creneau(activity_id)
         flash(f"Réservation effectuée !", "success")
-        requests.post(NTFY_URL, data="✅ Réservation effectuée pour l'activité ID : {activity_id}")
 
     auto.logout()
     return redirect(url_for('home'))

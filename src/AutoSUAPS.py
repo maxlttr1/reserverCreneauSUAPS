@@ -4,9 +4,10 @@ import requests
 import json
 from bs4 import BeautifulSoup
 import pandas as pd
+import requests
 
 class AutoSUAPS :
-    def __init__(self, username : str, password : str) -> None :
+    def __init__(self, username : str, password : str, ntfy_url : str) -> None :
         '''
         Permet de gérer les réservations de créneaux pour le SUAPS<br>
         Paramètres :
@@ -15,6 +16,7 @@ class AutoSUAPS :
         '''
         self.username = username
         self.password = password
+        self.ntfy_url = ntfy_url
 
     def login(self) -> None :
         '''
@@ -226,10 +228,13 @@ class AutoSUAPS :
                 res = self.poster_requete(creneau_id, activity_id)
                 if res == 201:
                     print(f"Inscription effectuée en {row['activity_name']}, le {row['jour']} pour le créneau de {row['creneau_horaire']}")
+                    requests.post(self.ntfy_url, data=f"✅ Réservation effectuée pour {row['activity_name']} le {row['jour']} pour le créneau de {row['creneau_horaire']}")
                 else:
                     print(f"Erreur {res} d'inscription en {row['activity_name']}, le {row['jour']} pour le créneau de {row['creneau_horaire']}")
+                    requests.post(self.ntfy_url, data=f"❌ Erreur {res} d'inscription en {row['activity_name']}, le {row['jour']} pour le créneau de {row['creneau_horaire']}")
             else:
                 print(f"Pas de place en {row['activity_name']}, le {row['jour']} pour le créneau de {row['creneau_horaire']}")
+                requests.post(self.ntfy_url, data=f"❌ Pas de place en {row['activity_name']}, le {row['jour']} pour le créneau de {row['creneau_horaire']}")
             print()
 
 
