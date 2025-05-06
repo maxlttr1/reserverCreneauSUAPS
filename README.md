@@ -19,7 +19,7 @@ Tout ce dont vous aurez besoin, c'est de votre username et password, et je suppo
 ---
 
 ## Fonctionnement
-On fait tourner le programme une première fois pour récupérer les IDs des créneaux qu'on veut réserver de manière automatique. Ensuite, on les place dans config.json et on laisse le programme faire !
+Le code a bien évolué et il n'y a plus que peu de choses à faire à la main. Une WebUI est là pour réserver facilement les créneaux (soit de manière instantanée soit de manière hebdomadaire). Et dans un thread, le serveur s'occupe de réserver à notre place les créneaux que nous avons choisi, dès qu'ils sont disponibles à la réservation.
 
 ### Ce que vous devez faire
 1. Cloner le dépot :
