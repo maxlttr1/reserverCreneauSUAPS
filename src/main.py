@@ -31,7 +31,7 @@ activities_cache = None
 activities_cache_timestamp = 0
 CACHE_EXPIRATION_TIME = 600  # seconds
 
-auto = AutoSUAPS(USERNAME, PASSWORD)
+auto = AutoSUAPS(USERNAME, PASSWORD)    
 
 # === FLASK AUTH ===
 class User(UserMixin):

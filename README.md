@@ -76,7 +76,7 @@ Pour ce faire :
 
 1. Ajout du token au fichier `.env`
 ```bash
-openssl rand -hex 32 >> config/.env
+echo "TOKEN=$(openssl rand -hex 32)" >> config/.env
 ```
 
 2. Copiez ce token !
