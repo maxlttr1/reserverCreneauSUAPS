@@ -1,3 +1,13 @@
+
+
+- [Bonjour !](#bonjour-)
+- [Fonctionnement](#fonctionnement)
+  - [Ce que vous devez faire](#ce-que-vous-devez-faire)
+  - [Configuration HTTPS Avec Caddy (Optionnel)](#configuration-https-avec-caddy-optionnel)
+
+---
+
+
 ## Bonjour !
 Le SUAPS (service sports de Nantes Université) propose des créneaux horaires pour faire du sport, cependant ces créneaux sont très vite remplis.
 J'ai donc fait un petit programme qui permet de réserver des créneaux sans s'embêter à se connecter à son compte, etc.
@@ -6,41 +16,40 @@ Tout se fait avec des requêtes GET/POST. J'ai utilisé [Burp Suite](https://por
 
 Tout ce dont vous aurez besoin, c'est de votre username et password, et je suppose qu'il faut que vous ayez adhéré au SUAPS.
 
+---
 
-### Fonctionnement
-On fait tourner le programme une première fois pour récupérer les IDs des créneaux qu'on veut réserver de manière automatique. Ensuite, on les place dans config.json et on laisse le programme faire !
+## Fonctionnement
+Le code a bien évolué et il n'y a plus que peu de choses à faire à la main. Une WebUI est là pour réserver facilement les créneaux (soit de manière instantanée soit de manière hebdomadaire). Et dans un thread, le serveur s'occupe de réserver à notre place les créneaux que nous avons choisi, dès qu'ils sont disponibles à la réservation.
 
 ### Ce que vous devez faire
-- Cloner le dépot :
+1. Cloner le dépot :
     ```bash
     git clone https://github.com/flash2974/reserverCreneauSUAPS && cd reserverCreneauSUAPS/
     ```
-- Dans `config/` renommer `.example.env` en `.env`, et `example.config.json` en `config.json` : 
+2. Dans `config/` renommer `.example.env` en `.env`, et `example.config.json` en `config.json` : 
     ```bash
     mv config/.example.env config/.env && mv config/example.config.json config/config.json
     ```
 
-- Ouvrir le fichier `.env` et remplir les champs **USERNAME** et **PASSWORD**
+2. Ouvrir le fichier `.env` et remplir les champs **USERNAME** et **PASSWORD**
     ```bash
     echo -e "USERNAME=username\nPASSWORD=mdp\nNTFY_URL=https://ntfy.sh/..." > config/.env
     ```
 
-#### Avec Docker:
-```bash
-docker compose up -d
-```
-- Ensuite, vous aurez accès à la *WebUI*. Dans un navigateur, allez à l'adresse de votre serveur (IP ou nom de domaine) et mettez vous sur le port 5000. Il faut au préalabale que le port soit ouvert.
+3. Lancer le programme avec Docker :
+    ```bash
+    docker-compose up -d
+    ```
+    Ensuite, vous aurez accès à la *WebUI*. Dans un navigateur, allez à l'adresse de votre serveur (IP ou nom de domaine) et mettez vous sur le port 5000. Il faut au préalabale que le port soit ouvert.
+        - Si vous faites tourner en local : [**http://localhost:5000**](http://localhost:5000)
+        - Si vous hébergez sur un serveur : **http://IP_de_mon_serveur:5000**
 
-    - Si vous faites tourner en local : [**http://localhost:5000**](http://localhost:5000)
-    - Si vous hébergez sur un serveur : **http://IP_de_mon_serveur:5000**
-
-Connectez-vous sur la WebUI à l'aide de votre mot de passe universitaire (celui enregistré dans le .env)
-Il vous suffira de cocher les **activités** qui vous intéressent et de sauvegarder. Les horaires d'activation du bot sont automatiquement définies.
+    Connectez-vous sur la WebUI à l'aide de votre mot de passe universitaire (celui enregistré dans le .env)
+    Il vous suffira de cocher les **activités** qui vous intéressent et de sauvegarder. Les horaires d'activation du bot sont automatiquement définies.
 
 <br>
 
-- Pour mettre à jour le container:
-
+**Pour mettre à jour le container :**
     ```bash
     docker compose down && \
     docker rmi reservercreneausuaps-app && \
@@ -50,7 +59,7 @@ Il vous suffira de cocher les **activités** qui vous intéressent et de sauvega
     
 <br>
 
-## Configuration HTTPS Avec Caddy
+### Configuration HTTPS Avec Caddy (Optionnel)
 1. Installer Caddy :
 ```bash
 sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
@@ -76,7 +85,7 @@ Pour ce faire :
 
 1. Ajout du token au fichier `.env`
 ```bash
-openssl rand -hex 32 >> config/.env
+echo "TOKEN=$(openssl rand -hex 32)" >> config/.env
 ```
 
 2. Copiez ce token !
