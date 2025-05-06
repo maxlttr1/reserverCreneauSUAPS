@@ -17,8 +17,9 @@
                     <button type="submit" name="action" value="sauvegarder">Sauvegarder</button>
                     <button type="submit" name="action" value="default">Default</button>
                 </div>
+                {% if sports|length > 1 %}
                 <section id="filters" style="margin: 40px;">
-                    <h3 style="text-align: center;">Filtrer par sport :</h2>
+                    <h3 style="text-align: center;">Filtrer par sport :</h3>
                     <div style="display: flex; flex-wrap: wrap; gap: 12px;">
                         {% for sport in sports %}
                             <label style="display: flex; align-items: center; gap: 5px;padding-right:50px">
@@ -28,6 +29,9 @@
                         {% endfor %}
                     </div>
                 </section>
+                {% else %}
+                    <div style="height: 20px;"></div>
+                {% endif %}
                 <table>
                     <thead>
                         <tr>
@@ -86,15 +90,17 @@
                                            .map(cb => cb.value);
         
                 document.querySelectorAll('tbody tr').forEach(row => {
-                    const activityName = row.children[1].innerText.trim();
-                    if (checkedSports.length === 0 || checkedSports.includes(activityName)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
+                    const activityName = row.children[1].innerText.trim(); 
+                    let displayRow = false;
+        
+                    if (checkedSports.length === 0 || checkedSports.some(sport => activityName.startsWith(sport))) {
+                        displayRow = true;
                     }
+        
+                    row.style.display = displayRow ? '' : 'none';
                 });
             });
-        });
+        });        
 
         const checkCreneau = {};
 
